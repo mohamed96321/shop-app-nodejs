@@ -1,3 +1,9 @@
+:root {
+  --clr-neutral-100: #4d4d4d;
+  --clr-white: #FFFFFF;
+  --clr-primary-100: #00695c;
+}
+
 .grid {
   display: flex;
   flex-wrap: wrap;
@@ -41,17 +47,17 @@
 
 .btn {
   font: inherit;
-  border: 1px solid #00695c;
-  color: #00695c;
-  background: white;
+  border: 1px solid var(--clr-primary-100);
+  color: var(--clr-primary-100);
+  background: var(--clr-white);
   border-radius: 3px;
   cursor: pointer;
 }
 
 .btn:hover,
 .btn:active {
-  background-color: #00695c;
-  color: white;
+  background-color: var(--clr-primary-100);
+  color: var(--clr-white);
 }
 
 .product-form {
@@ -72,7 +78,7 @@
 
 .product__price {
   text-align: center;
-  color: #4d4d4d;
+  color: var(--clr-neutral-100);
   margin-bottom: 0.5rem;
 }
 

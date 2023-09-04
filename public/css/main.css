@@ -1,12 +1,7 @@
 :root {
-  --clr-yellow: #e7d940;
+  --clr-yellow: #ffeb3b;
   --clr-white: #FFFFFF;
-  --clr-black: #111010;
-  --clr-primary-100: #0C4047;
-  --clr-primary-alt: #d2d3d3;
-  --clr-primary-300: #535353;
-  --clr-primary-500: #B50E17;
-  --clr-primary-600: #551A8B;
+  --clr-primary-100: #00695c;
 }
 
 @font-face {
@@ -47,7 +42,7 @@ main {
 .main-header {
   width: 100%;
   height: 3.5rem;
-  background-color: #00695c;
+  background-color: var(--clr-primary-100);
   padding: 0 1.5rem;
 }
 
@@ -71,11 +66,11 @@ main {
 
 .main-header__item a {
   text-decoration: none;
-  color: white;
+  color: var(--clr-white);
 }
 
 .main-header__item a:hover,
 .main-header__item a:active,
 .main-header__item a.active {
-  color: #ffeb3b;
+  color: var(--clr-yellow);
 }
