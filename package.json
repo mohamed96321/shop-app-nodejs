@@ -1,19 +1,31 @@
 {
-  "name": "real-project-mongo-db-nodejs",
+  "name": "shop-app-nodejs",
   "version": "1.0.0",
-  "description": "New project with mongodb",
-  "main": "app.js",
+  "description": "shop-app-by-using-nodejs-expressjs-mongodb",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha",
+    "start": "nodemon app.js",
+    "start-server": "node app.js"
   },
   "author": "Mohammed Atef",
   "license": "ISC",
   "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
     "nodemon": "^3.0.1"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "csurf": "^1.11.0",
+    "ejs": "^3.1.9",
     "express": "^4.18.2",
-    "mongoose": "^7.4.2",
-    "socket.io": "^4.7.2"
+    "express-handlebars": "^7.1.2",
+    "hbs": "^4.2.0",
+    "mongodb": "^5.7.0",
+    "mongoose": "^7.4.3",
+    "nodemailer": "^6.9.4",
+    "pug": "^3.0.2",
+    "serve-favicon": "^2.5.0"
   }
 }
