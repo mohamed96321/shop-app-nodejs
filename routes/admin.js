@@ -8,7 +8,12 @@ const products = [];
 
 // /admin/add-product => GET
 router.get('/add-product', (req, res, next) => {
-  res.render('add-product', { pageTitle: 'AZUW | Admin', path: '/admin/add-product' });
+  res.render('add-product',
+  { 
+    pageTitle: 'AZUW | Admin', 
+    path: '/admin/add-product',
+    activeProduct: true
+  });
 });
 
 // /admin/add-product => POST

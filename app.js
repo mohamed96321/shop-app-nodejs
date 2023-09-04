@@ -1,13 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const hbs = require('hbs');
-
 const app = express();
 const path = require('path');
 const favicon = require('serve-favicon');
 
 // Enable hbs file
 app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views/layouts/'));
 app.set('views', 'views');
 
 // Enable pug file
