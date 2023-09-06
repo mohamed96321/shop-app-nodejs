@@ -1,2 +1,2 @@
 # shop-app-nodejs
-Shop App with Nodejs, Expressjs, Ejs, and JSON data file
+Shop App with Nodejs, Expressjs, Ejs, | JSON | Mongoose | PostgreSQL | GraphQL | Stripe
