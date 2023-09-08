@@ -20,6 +20,11 @@ form {
 }
 
 .centered {
+  margin-top: 10%;
+}
+
+.center,
+.centered {
   text-align: center;
 }
 
