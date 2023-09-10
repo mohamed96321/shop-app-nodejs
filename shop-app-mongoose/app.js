@@ -12,7 +12,7 @@ const favicon = require('serve-favicon');
 // app.set('view engine', 'pug');
 // app.set('views', 'views');
 
-// Config hbs file
+// Config ejs file
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
