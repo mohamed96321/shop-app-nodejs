@@ -1,8 +1,3 @@
-:root {
-  --clr-gary: #a1a1a1;
-  --clr-primary-100: #00695c;
-}
-
 .form-control {
   margin: 1rem 0;
 }
@@ -17,12 +12,12 @@
 
 .form-control input,
 .form-control textarea {
-  border: 1px solid var(--clr-gary);
+  border: 1px solid #a1a1a1;
   font: inherit;
   border-radius: 2px;
 }
 
 .form-control input:focus,
 .form-control textarea:focus {
-  outline-color: var(--clr-primary-100);
+  outline-color: #00695c;
 }

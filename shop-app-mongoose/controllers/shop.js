@@ -1,82 +1,119 @@
 const Product = require('../models/product');
-const Cart = require('../models/cart');
+const Order = require('../models/order');
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
+  Product
+  .find()
+  .then((products) => {
     res.render('shop/product-list', {
       prods: products,
       pageTitle: 'AZUW Store | Products', 
       path: '/products'
     });
-  });
+  })
+  .catch(err => console.log(err));
 };
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findById(prodId, product => {
+
+  Product
+  .findById(prodId)
+  .then(product => {
     res.render('shop/product-details', {
       product: product,
       pageTitle: `AZUW Store | ${product.title}`,
-      path: '/products' 
+      path: '/products',
+      isAuthenticated: req.isLoggedIn
     });
-  });
+  })
+  .catch(err => console.log(err));
 };
 
 exports.getView = (req, res, next) => {
-  Product.fetchAll((products) => {
+  Product
+  .find()
+  .then((products) => {
     res.render('shop/view', {
       prods: products,
       pageTitle: 'AZUW Store', 
-      path: '/'
+      path: '/',
+      isAuthenticated: req.isLoggedIn
     });
-  });
+  })
+  .catch(err => console.log(err));
 };
 
 exports.getCart = (req, res, next) => {
-  Cart.getProductCart(cart => {
-    Product.fetchAll(products => {
-      const cartProducts = [];
-      for (product of products) {
-        const cartProductData = cart.products.find(prod => prod.id === product.id);
-        if (cartProductData) {
-          cartProducts.push({ productData: product, qty: cartProductData.qty });
-        }
-      }
-      res.render('shop/cart', {
-        path: '/cart',
-        pageTitle: 'AZUW Store | My Cart', 
-        products: cartProducts
-      });
+  req.user
+  .populate('cart.items.productId')
+  .then(user => {
+    const products = user.cart.items;
+    res.render('shop/cart', {
+      path: '/cart',
+      pageTitle: 'AZUW Store | My Cart', 
+      products: products,
+      isAuthenticated: req.isLoggedIn
     });
-  });
+  })
+  .catch(err => console.log(err));
 };
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId, (product) => {
-    Cart.addProduct(prodId, product.price);
-  });
-  res.redirect('/cart');
+  Product.findById(prodId).then(product => {
+    return req.user.addToCart(product);
+  })
+  .then(result => {
+    console.log(result);
+    res.redirect('/cart');
+  })
+  .catch(err => console.log(err));
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId, product => {
-    Cart.deleteProduct(prodId, product.price);
+  req.user
+  .removeFromCart(prodId)
+  .then(result => {
     res.redirect('/cart');
-  });
+  }).catch(err => console.log(err));
 };
 
 exports.getOrders = (req, res, next) => {
-  res.render('shop/orders', {
-    path: '/orders',
-    pageTitle: 'AZUW Store | My Orders', 
-  });
+  Order.find({ "user.userId": req.user._id })
+  .then(orders => {
+    res.render('shop/orders', {
+      path: '/orders',
+      pageTitle: 'AZUW Store | My Orders', 
+      orders: orders,
+      isAuthenticated: req.isLoggedIn
+    });
+  })
+  .catch(err => console.log(err));
 };
 
-exports.getCheckout = (req, res, next) => {
-  res.render('shop/checkout', {
-    path: '/checkout',
-    pageTitle: 'AZUW Store | Payment', 
-  });
+exports.postOrder = (req, res, next) => {
+  req.user
+  .populate('cart.items.productId')
+  .then(user => {
+    const products = user.cart.items.map(i => {
+      return {quantity: i.quantity, product: { ...i.productId._doc } };
+    }); 
+    const order = new Order({
+      user: {
+        name: req.user.name,
+        userId: req.user
+      },
+      products: products
+    });
+    return order.save();
+  })
+  .then(result => {
+    req.user.clearCart();
+  })
+  .then(() => {
+    res.redirect('/orders');
+  })
+  .catch(err => console.log(err));
 };

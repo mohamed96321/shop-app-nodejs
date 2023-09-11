@@ -1,3 +1,4 @@
+const product = require('../models/product');
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
@@ -6,6 +7,7 @@ exports.getAddProduct = (req, res, next) => {
     pageTitle: 'AZUW Admin | Add Product', 
     path: '/admin/add-product',
     editing: false,
+    isAuthenticated: req.isLoggedIn
   });
 };
 
@@ -15,9 +17,20 @@ exports.postAddProduct = (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
 
-  const product = new Product(null, title, imageUrl, description, price);
-  product.save();
-  res.redirect('/');
+  const product = new Product({
+    title: title, 
+    price: price, 
+    description: description, 
+    imageUrl: imageUrl,
+    userId: req.user
+  });
+  product
+  .save()
+  .then(result => {
+    console.log("Created Product");
+    res.redirect('/admin/products');
+  })
+  .catch(err => console.log(err));
 };
 
 exports.postEditProduct = (req, res, next) => {
@@ -26,16 +39,20 @@ exports.postEditProduct = (req, res, next) => {
   const updatedPrice = req.body.price;
   const updatedImageUrl = req.body.imageUrl;
   const updatedDesc = req.body.description;
-  const updatedProduct = new Product(
-    prodId, 
-    updatedTitle, 
-    updatedImageUrl, 
-    updatedDesc, 
-    updatedPrice
-  );
-  updatedProduct.save();
-  res.redirect('/admin/products');
-};
+  Product.findById(prodId)
+  .then(product => {
+    product.title = updatedTitle;
+    product.price = updatedPrice;
+    product.description = updatedDesc;
+    product.imageUrl = updatedImageUrl;
+    return product.save();
+  })
+  .then(result => {
+    console.log("Updated Product");
+    res.redirect('/admin/products');
+  })
+  .catch(err => console.log(err));
+}; 
 
 exports.getEditProduct = (req, res, next) => {
   const editMode = req.query.edit;
@@ -43,7 +60,9 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect('/');
   }
   const prodId = req.params.productId;
-  Product.findById(prodId, product => {
+  Product
+  .findById(prodId)
+  .then(product => {
     if (!product) {
       return res.redirect('/');
     }
@@ -51,23 +70,35 @@ exports.getEditProduct = (req, res, next) => {
       pageTitle: 'AZUW Admin | Edit Product', 
       path: '/admin/edit-product',
       editing: editMode,
-      product: product
+      product: product,
+      isAuthenticated: req.isLoggedIn
     });
-  });
+  })
+  .catch(err => console.log(err));
 };
 
 exports.getProduct = (req, res, next) => {
-  Product.fetchAll((products) => {
+  Product
+  .find()
+  // .select('title price -_id')
+  // .populate('userId', 'name')
+  .then((products) => {
     res.render('admin/products', {
       prods: products,
       pageTitle: 'AZUW Admin | Manage Products', 
-      path: '/admin/products'
+      path: '/admin/products',
+      isAuthenticated: req.isLoggedIn
     });
-  });
+  })
+  .catch(err => console.log(err));
 };
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deleteById(prodId);
-  res.redirect('/admin/products');
+  Product.findByIdAndRemove(prodId)
+  .then(result => {
+    console.log("Product is removed!")
+    res.redirect('/admin/products');
+  })
+  .catch(err => console.log(err));
 };
