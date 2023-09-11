@@ -8,7 +8,8 @@ exports.getProducts = (req, res, next) => {
     res.render('shop/product-list', {
       prods: products,
       pageTitle: 'AZUW Store | Products', 
-      path: '/products'
+      path: '/products',
+      isAuthenticated: req.session.isLoggedIn
     });
   })
   .catch(err => console.log(err));
@@ -24,7 +25,7 @@ exports.getProduct = (req, res, next) => {
       product: product,
       pageTitle: `AZUW Store | ${product.title}`,
       path: '/products',
-      isAuthenticated: req.isLoggedIn
+      isAuthenticated: req.session.isLoggedIn
     });
   })
   .catch(err => console.log(err));
@@ -38,7 +39,7 @@ exports.getView = (req, res, next) => {
       prods: products,
       pageTitle: 'AZUW Store', 
       path: '/',
-      isAuthenticated: req.isLoggedIn
+      isAuthenticated: req.session.isLoggedIn
     });
   })
   .catch(err => console.log(err));
@@ -53,7 +54,7 @@ exports.getCart = (req, res, next) => {
       path: '/cart',
       pageTitle: 'AZUW Store | My Cart', 
       products: products,
-      isAuthenticated: req.isLoggedIn
+      isAuthenticated: req.session.isLoggedIn
     });
   })
   .catch(err => console.log(err));
@@ -87,7 +88,7 @@ exports.getOrders = (req, res, next) => {
       path: '/orders',
       pageTitle: 'AZUW Store | My Orders', 
       orders: orders,
-      isAuthenticated: req.isLoggedIn
+      isAuthenticated: req.session.isLoggedIn
     });
   })
   .catch(err => console.log(err));

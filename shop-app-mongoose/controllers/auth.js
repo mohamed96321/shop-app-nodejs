@@ -1,15 +1,29 @@
 const User = require('../models/user');
 
-exports.getLoginAuth = (req, res, next) => {
-  const isLoggedIn = req.get('Cookie').split('=')[1];
+exports.getLogin = (req, res, next) => {
   res.render('auth/login', {
     path: '/login',
-    pageTitle: 'AZUW Store | Login',
-    isAuthenticated: isLoggedIn
-  })
+    pageTitle: 'Login',
+    isAuthenticated: false
+  });
 };
 
-exports.postLoginAuth = (req, res, next) => {
-  res.setHeader('Set-Cookie', 'loggedIn=true');
-  res.redirect('/');
+exports.postLogin = (req, res, next) => {
+  User.findById('64fdc75baede2567da47d6fb')
+    .then(user => {
+      req.session.isLoggedIn = true;
+      req.session.user = user;
+      req.session.save(err => {
+        console.log(err);
+        res.redirect('/');
+      })
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postLogout = (req, res, next) => {
+  req.session.destroy(err => {
+    console.log(err);
+    res.redirect('/');
+  });
 };

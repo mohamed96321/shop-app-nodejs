@@ -1,9 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const app = express();
 const path = require('path');
 const favicon = require('serve-favicon');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+
+const app = express();
 
 // Config hbs file
 // app.set('view engine', 'hbs');
@@ -17,6 +20,13 @@ const mongoose = require('mongoose');
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+const MONGODB_URI = 'mongodb+srv://mohamedatef556:Mohamed96321Atef@cluster0.pponlh5.mongodb.net/shop';
+
+const store = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: 'sessions'
+});
+
 const adminRoutes = require('./routes/admin.js');
 const shopRoutes = require('./routes/shop.js');
 const authRoutes = require('./routes/auth.js');
@@ -28,9 +38,18 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(session({ 
+  secret: 'my secret', 
+  resave: false, 
+  saveUninitialized: false, 
+  store: store 
+}));
 
 app.use((req, res, next) => {
-  User.findById('64fdc75baede2567da47d6fb')
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
   .then(user => {
     req.user = user;
     next();
@@ -45,7 +64,9 @@ app.use(authRoutes);
 app.use(errorController.get404);
 
 mongoose
-.connect('mongodb+srv://mohamedatef556:Mohamed96321Atef@cluster0.pponlh5.mongodb.net/shop?retryWrites=true&w=majority')
+.connect(
+  MONGODB_URI
+)
 .then(result =>{
   User.findOne()
   .then(user => {
