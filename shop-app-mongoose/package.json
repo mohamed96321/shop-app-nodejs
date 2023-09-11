@@ -27,7 +27,8 @@
     "hbs": "^4.2.0",
     "mongodb": "^5.7.0",
     "mongoose": "^7.4.3",
-    "nodemailer": "^6.9.4",
+    "nodemailer": "^6.9.5",
+    "nodemailer-sendgrid-transport": "^0.2.0",
     "pug": "^3.0.2",
     "serve-favicon": "^2.5.0"
   }

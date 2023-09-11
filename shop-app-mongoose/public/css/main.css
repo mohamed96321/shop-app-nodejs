@@ -15,6 +15,18 @@ main {
   margin: auto;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.flex {
+  display: flex;
+  margin: auto;
+  align-items: center;
+  justify-content: space-between;
+}
+
 form {
   display: inline;
 }

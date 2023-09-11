@@ -1,6 +1,13 @@
 const bcrypt = require('bcryptjs');
-
 const User = require('../models/user');
+const nodemailer = require('nodemailer');
+const sendgridTransport = require('nodemailer-sendgrid-transport'); 
+
+const transporter = nodemailer.createTransport(sendgridTransport({
+  auth: {
+    api_key: 'SG.ir0lZRloSaGxAa2RFbIAXA.06uJhFKcW-T1VeTYtxZDHmcgS1-oQJ4fkwGZcJI'
+  }
+}));
 
 exports.getLogin = (req, res, next) => {
   let message = req.flash('error');
@@ -11,7 +18,7 @@ exports.getLogin = (req, res, next) => {
   }
   res.render('auth/login', {
     path: '/login',
-    pageTitle: 'Login',
+    pageTitle: 'ASUW Store | Login',
     errorMessage: message
   });
 };
@@ -74,7 +81,14 @@ exports.postSignup = (req, res, next) => {
       return user.save();
     }).then(result => {
       res.redirect('/login');
-    });
+      return transporter.sendMail({
+        to: email,
+        from: 'shop@node-complete.com',
+        subject: 'Signup succeeded!',
+        html: '<h1>You successfully signed up!</h1>'
+      });
+    })
+    .catch(err => console.log(err));
   })
   .catch(err => console.log(err));
 };
@@ -88,7 +102,21 @@ exports.getSignup = (req, res, next) => {
   }
   res.render('auth/signup', {
     path: '/signup',
-    pageTitle: 'Signup',
+    pageTitle: 'ASUW Store | Signup',
+    errorMessage: message
+  });
+};
+
+exports.getReset = (req, res, next) => {
+  let message = req.flash('error');
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render('auth/reset', {
+    path: '/reset',
+    pageTitle: 'ASUW Store | Reset Password',
     errorMessage: message
   });
 };
