@@ -1,13 +1,17 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const nodemailer = require('nodemailer');
-const sendgridTransport = require('nodemailer-sendgrid-transport'); 
+const { Google } = require('googleapis');
 
-const transporter = nodemailer.createTransport(sendgridTransport({
+// API Keys For Google
+const CLIENT_KEY = '';
+
+let transporter = nodemailer.createTransport({
+  userId: 'my-address@gmail.com',
   auth: {
-    api_key: 'SG.ir0lZRloSaGxAa2RFbIAXA.06uJhFKcW-T1VeTYtxZDHmcgS1-oQJ4fkwGZcJI'
+    accessToken: 'AIzaSyBSycaaHmcWK5k315D4w1FetZW_xXwkPUA'
   }
-}));
+});
 
 exports.getLogin = (req, res, next) => {
   let message = req.flash('error');
@@ -84,9 +88,13 @@ exports.postSignup = (req, res, next) => {
       return transporter.sendMail({
         to: email,
         from: 'shop@node-complete.com',
+        replyTo: 'reply-to@example.com',
         subject: 'Signup succeeded!',
         html: '<h1>You successfully signed up!</h1>'
       });
+    })
+    .then((info) => {
+      console.log('SUCCESS');
     })
     .catch(err => console.log(err));
   })
