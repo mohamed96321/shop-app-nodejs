@@ -1,3 +1,8 @@
+:root {
+  --clr-primary: #EB5446;
+  --clr-neutral: #3F1D38;
+}
+
 .orders {
   list-style: none;
   padding: 0;
@@ -24,6 +29,6 @@
 .orders__products-item {
     margin: 0.5rem 0;
     padding: 0.5rem;
-    border: 1px solid #00695c;
-    color: #00695c;
+    border: 1px solid var(--clr-neutral);
+    color: var(--clr-neutral);
 }

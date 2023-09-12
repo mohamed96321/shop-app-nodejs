@@ -1,3 +1,7 @@
+:root {
+  --clr-neutral: #3F1D38;
+}
+
 .form-control {
   margin: 1rem 0;
 }
@@ -12,12 +16,12 @@
 
 .form-control input,
 .form-control textarea {
-  border: 1px solid #a1a1a1;
+  border: 1px solid var(--clr-neutral);
   font: inherit;
   border-radius: 2px;
 }
 
 .form-control input:focus,
 .form-control textarea:focus {
-  outline-color: #00695c;
+  outline-color: var(--clr-neutral);
 }

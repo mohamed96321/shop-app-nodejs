@@ -1,4 +1,13 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+:root {
+  --clr-primary: #EB5446;
+  --clr-neutral: #3F1D38;
+  --clr-white: #FFFFFF;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Regular-webfont.woff") format("woff");
+}
 
 * {
   box-sizing: border-box;
@@ -7,7 +16,7 @@
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 main {
@@ -66,7 +75,7 @@ form {
 .main-header {
   width: 100%;
   height: 3.5rem;
-  background-color: #00695c;
+  background-color: var(--clr-neutral);
   padding: 0 1.5rem;
   display: flex;
   align-items: center;
@@ -98,7 +107,7 @@ form {
   background: transparent;
   border: none;
   text-decoration: none;
-  color: white;
+  color: var(--clr-white);
   cursor: pointer;
 }
 
@@ -107,7 +116,7 @@ form {
 .main-header__item a.active,
 .main-header__item button:hover,
 .main-header__item button:active {
-  color: #ffeb3b;
+  color: var(--clr-primary);
 }
 
 .mobile-nav {
@@ -117,7 +126,7 @@ form {
   position: fixed;
   left: 0;
   top: 0;
-  background: white;
+  background: var(--clr-white);
   z-index: 10;
   padding: 2rem 1rem 1rem 2rem;
   transform: translateX(-100%);
@@ -151,7 +160,7 @@ form {
 .mobile-nav__item a:active,
 .mobile-nav__item a:hover,
 .mobile-nav__item a.active {
-  background: #00695c;
+  background: var(--clr-neutral);
   color: white;
   border-radius: 3px;
 }
@@ -172,8 +181,8 @@ form {
 
 #side-menu-toggle:active,
 #side-menu-toggle:hover {
-  color: #ffeb3b;
-  border-color: #ffeb3b;
+  color: var(--clr-primary);
+  border-color: var(--clr-primary);
 }
 
 .backdrop {
@@ -233,16 +242,16 @@ form {
   padding: 0.25rem 1rem;
   text-decoration: none;
   font: inherit;
-  border: 1px solid #00695c;
-  color: #00695c;
-  background: white;
+  border: 1px solid var(--clr-neutral);
+  color: var(--clr-neutral);
+  background: var(--clr-white);
   border-radius: 3px;
   cursor: pointer;
 }
 
 .btn:hover,
 .btn:active {
-  background-color: #00695c;
+  background-color: var(--clr-primary);
   color: white;
 }
 
@@ -271,7 +280,7 @@ form {
 }
 
 .password_info {
-  font-size: 0.75rem;
+  font-size: 13px;
   color: rgb(41, 39, 39);
   line-height: 1;
   margin-bottom: 28px;
