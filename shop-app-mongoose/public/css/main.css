@@ -269,3 +269,10 @@ form {
     width: 30rem;
   }
 }
+
+.password_info {
+  font-size: 0.75rem;
+  color: rgb(41, 39, 39);
+  line-height: 1;
+  margin-bottom: 28px;
+}

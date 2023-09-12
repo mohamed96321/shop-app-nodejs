@@ -11,21 +11,39 @@ router.get('/login', authController.getLogin);
 
 router.get('/signup', authController.getSignup);
 
-router.post('/login', authController.postLogin);
+router.post('/login', [
+    body('email')
+    .isEmail()
+    .withMessage('Invalid email or password. Please enter correct one.')
+    // .normalizeEmail()
+    ,
+    body('password')
+    .custom((value, { req }) => {
+      if (value === req.body.password) {
+        return true;
+      }
+      throw new Error('Password must be matched with Your Password.');
+    })
+  ], 
+  authController.postLogin);
 
 router.post('/signup', 
   [
     check('email')
     .isEmail()
     .matches('@g?mail\.com$')
-    .withMessage('Please enter a valid email')
+    .withMessage('Please enter a valid email.')
+    // .normalizeEmail()
     ,
     body(
       'password', 
-      'Password must contain at least 6 characters(e.g. @Mp579).'
+      'Password must contain at least 5 characters.'
     )
-    .matches('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{6,}$'),
-    body('confirmPassword').custom((value, { req }) => {
+    // .trim()
+    .matches('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{5,}$'),
+    body('confirmPassword')
+    // .trim()
+    .custom((value, { req }) => {
       if (value !== req.body.password) {
         throw new Error('Password & Confirm Password have to match!');
       }

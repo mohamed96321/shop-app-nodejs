@@ -3,7 +3,8 @@ const crypto = require('crypto');
 const User = require('../models/user');
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
-const { validationResult } = require('express-validator'); 
+const { validationResult } = require('express-validator');
+const errorMsg = 'Invalid email or password. Please enter correct one.';
 
 // API Keys For Google
 const GOOGLE_CLIENT_ID = '122824213593-fk25er245keqedle3dofdjed9far8ic9.apps.googleusercontent.com';
@@ -61,7 +62,7 @@ exports.postLogin = (req, res, next) => {
   User.findOne({email: email})
     .then(user => {
       if (!user) {
-        req.flash('error', 'Invalid email or password.');
+        req.flash('error', errorMsg);
         return res.redirect('/login');
       }
       bcrypt.compare(password, user.password)
@@ -74,7 +75,7 @@ exports.postLogin = (req, res, next) => {
             return res.redirect('/');
           });
         }
-        req.flash('error', 'Invalid email or password.');
+        req.flash('error', 'Password must be matched with Your Password.');
         res.redirect('/login');
       })
       .catch(err => {
