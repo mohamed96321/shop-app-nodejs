@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const User = require('../models/user');
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
-const user = require('../models/user');
+const { validationResult } = require('express-validator'); 
 
 // API Keys For Google
 const GOOGLE_CLIENT_ID = '122824213593-fk25er245keqedle3dofdjed9far8ic9.apps.googleusercontent.com';
@@ -49,6 +49,15 @@ exports.getLogin = (req, res, next) => {
 exports.postLogin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render('auth/login', {
+      path: '/login',
+      pageTitle: 'ASUW Store | Login',
+      errorMessage: errors.array()[0].msg
+    });
+  }
   User.findOne({email: email})
     .then(user => {
       if (!user) {
@@ -86,7 +95,16 @@ exports.postLogout = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  const confirmPassword = req.body.confirmPassword;
+  
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+    return res.status(422).render('auth/signup', {
+      path: '/signup',
+      pageTitle: 'ASUW Store | Signup',
+      errorMessage: errors.array()[0].msg
+    });
+  }
   User.findOne({email: email})
   .then(userDoc => {
     if (userDoc) {
@@ -107,12 +125,9 @@ exports.postSignup = (req, res, next) => {
       return transporter.sendMail({
         to: email,
         from: MY_EMAIL,
-        subject: 'Verification Signing up!',
+        subject: 'Succeeded Signing up!',
         html: `
-          <h1>You successfully signed up!</h1>
-          <p>Verification Signing up by clicking on the link below.</p>
-          <a herf="">Click here!</a>
-          <a href="http://localhost:3000/verified/">Click here!</a>
+          <p>Congrats! you are signing up successfully.</p>
         `
       });
     })

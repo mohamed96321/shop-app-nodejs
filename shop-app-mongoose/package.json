@@ -24,6 +24,7 @@
     "express": "^4.18.2",
     "express-handlebars": "^7.1.2",
     "express-session": "^1.17.3",
+    "express-validator": "^7.0.1",
     "gmail-nodemailer-transport": "^3.0.2",
     "googleapis": "^126.0.1",
     "hbs": "^4.2.0",
