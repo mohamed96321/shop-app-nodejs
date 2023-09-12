@@ -1,15 +1,34 @@
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const User = require('../models/user');
 const nodemailer = require('nodemailer');
-const { Google } = require('googleapis');
+const { google } = require('googleapis');
+const user = require('../models/user');
 
 // API Keys For Google
-const CLIENT_KEY = '';
+const GOOGLE_CLIENT_ID = '122824213593-fk25er245keqedle3dofdjed9far8ic9.apps.googleusercontent.com';
+const GOOGLE_CLIENT_SECRET = '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';
+const REFRESH_TOKEN = '1//04fgffE0RHfxaCgYIARAAGAQSNwF-L9IrXJQLMY2o40jX8F2R5icXq2M6NvaJ73GB-rc3RF8jzI0eKxJqJBRd9Dm89oDRT9ghp3Y';
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
+const MY_EMAIL = 'atefm.me499@gmail.com';
 
+const oAuthClient = new google.auth.OAuth2(
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+  REDIRECT_URI
+);
+
+oAuthClient.setCredentials({ refresh_token: REFRESH_TOKEN });
+const ACCESS_TOKEN = oAuthClient.getAccessToken();
 let transporter = nodemailer.createTransport({
-  userId: 'my-address@gmail.com',
+  service: 'gmail',
   auth: {
-    accessToken: 'AIzaSyBSycaaHmcWK5k315D4w1FetZW_xXwkPUA'
+    type: 'OAuth2',
+    user: MY_EMAIL,
+    clientId: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    refreshToken: REFRESH_TOKEN,
+    accessToken: ACCESS_TOKEN
   }
 });
 
@@ -87,10 +106,14 @@ exports.postSignup = (req, res, next) => {
       res.redirect('/login');
       return transporter.sendMail({
         to: email,
-        from: 'shop@node-complete.com',
-        replyTo: 'reply-to@example.com',
-        subject: 'Signup succeeded!',
-        html: '<h1>You successfully signed up!</h1>'
+        from: MY_EMAIL,
+        subject: 'Verification Signing up!',
+        html: `
+          <h1>You successfully signed up!</h1>
+          <p>Verification Signing up by clicking on the link below.</p>
+          <a herf="">Click here!</a>
+          <a href="http://localhost:3000/verified/">Click here!</a>
+        `
       });
     })
     .then((info) => {
@@ -127,4 +150,84 @@ exports.getReset = (req, res, next) => {
     pageTitle: 'ASUW Store | Reset Password',
     errorMessage: message
   });
+};
+
+exports.postReset = (req, res, next) => {
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err);
+      return res.redirect('/reset');
+    }
+    const token = buffer.toString('hex');
+    User.findOne({email: req.body.email})
+    .then(user => {
+      if (!user) {
+        req.flash('error', 'No account with that email. Please enter correct email.');
+        return res.redirect('/reset');
+      }
+      user.resetToken = token;
+      user.resetTokenExpiration = Date.now() + 3600000;
+      return user.save();
+    })
+    .then(result => {
+      res.redirect('/');
+      return transporter.sendMail({
+        to: req.body.email,
+        from: MY_EMAIL,
+        subject: 'Password Reset.',
+        html: `
+          <p>You requested a password reset</p>
+          <p>Click this link below, to set a new password</p>
+          <a href="http://localhost:3000/reset/${token}">Click here!</a>
+        `
+      });
+    })
+    .then(info => {
+        console.log('Email sent successfully');
+    })
+    .catch(err => console.log(err));
+  });
+};
+
+exports.getNewPassword = (req, res, next) => {
+  const token = req.params.token;
+  User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
+  .then(user => {
+    let message = req.flash('error');
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render('auth/new-password', {
+    path: '/new-password',
+    pageTitle: 'ASUW Store | Update Password',
+    errorMessage: message,
+    userId: user._id.toString(),
+    passwordToken: token
+  });
+  })
+  .catch(err => console.log(err));
+};
+
+exports.postNewPassword = (req, res, next) => {
+  const newPassword = req.body.password;
+  const userId = req.body.userId;
+  const passwordToken = req.body.passwordToken;
+  let resetUser;
+  User.findOne({resetToken: passwordToken, resetTokenExpiration: {$gt: Date.now()}, _id: userId})
+  .then(user => {
+    resetUser = user;
+    return bcrypt.hash(newPassword, 12);
+  })
+  .then(hashedPassword => {
+    resetUser.password = hashedPassword;
+    resetUser.resetToken= undefined;
+    resetUser.resetTokenExpiration = undefined;
+    return resetUser.save();
+  })
+  .then(result => {
+    res.redirect('/login');
+  })
+  .catch(err => console.log(err));
 };
