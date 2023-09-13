@@ -3,6 +3,8 @@ const path = require('path');
 
 const { body } = require('express-validator');
 
+const message = 'Enter valid values.';
+
 const adminController = require('../controllers/admin.js');
 const isAuth = require('../middleware/is-auth.js');
 
@@ -19,13 +21,13 @@ router.get('/edit-product/:productId', isAuth, adminController.getEditProduct);
 
 // /admin/add-product => POST
 router.post('/add-product', [
-  body('title')
+  body('title', message)
   .isString()
   .isLength({ min: 4 })
   .trim(),
-  body('imageUrl').isURL(),
-  body('price').isFloat(),
-  body('description')
+  body('imageUrl', message).isURL(),
+  body('price', message).isFloat(),
+  body('description', message)
   .isLength({ min: 5, max: 100 })
   .trim()
   ], 
@@ -35,13 +37,13 @@ router.post('/add-product', [
 
 // /admin/edit-product => POST
 router.post('/edit-product', [
-  body('title')
+  body('title', message)
   .isString()
   .isLength({ min: 4 })
   .trim(),
-  body('imageUrl').isURL(),
-  body('price').isFloat(),
-  body('description')
+  body('imageUrl', message).isURL(),
+  body('price', message).isFloat(),
+  body('description', message)
   .isLength({ min: 5, max: 100 })
   .trim()
   ], 

@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
 const Product = require('../models/product');
 
@@ -31,10 +32,12 @@ exports.postAddProduct = (req, res, next) => {
         price: price,
         description: description
       },
-      errorMessage: errors.array()[0].msg
+      errorMessage: 'You should fill out all fields!'
     });
   }
   const product = new Product({
+    // For checking any errors at database server
+    // _id: new mongoose.Types.ObjectId('65007f52b8a222af659ea0fe'),
     title: title, 
     price: price, 
     description: description, 
@@ -47,7 +50,12 @@ exports.postAddProduct = (req, res, next) => {
     console.log("Created Product");
     res.redirect('/admin/products');
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+    // res.redirect('/500');
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 };
 
 exports.postEditProduct = (req, res, next) => {
@@ -72,7 +80,7 @@ exports.postEditProduct = (req, res, next) => {
         description: updatedDesc,
         _id: prodId
       },
-      errorMessage: errors.array()[0].msg
+      errorMessage: 'You should fill out all fields!'
     });
   }
 
@@ -90,7 +98,11 @@ exports.postEditProduct = (req, res, next) => {
       res.redirect('/admin/products');
     })
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 }; 
 
 exports.getEditProduct = (req, res, next) => {
@@ -114,7 +126,11 @@ exports.getEditProduct = (req, res, next) => {
       errorMessage: null
     });
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 };
 
 exports.getProduct = (req, res, next) => {
