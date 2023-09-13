@@ -1,89 +1,60 @@
-<div class="backdrop"></div>
-<header class="main-header">
-    <button id="side-menu-toggle">Menu</button>
-    <nav class="main-header__nav">
-        <ul class="main-header__item-list">
-            <li class="main-header__item">
-                <a class="<%= path === '/' ? 'active' : '' %>" href="/">Shop</a>
-            </li>
-            <li class="main-header__item">
-                <a class="<%= path === '/products' ? 'active' : '' %>" href="/products">Products</a>
-            </li>
-            <% if (isAuthenticated) { %>
-                <li class="main-header__item">
-                    <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
-                </li>
-                <li class="main-header__item">
-                    <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
-                </li>
-                <li class="main-header__item">
-                    <a class="<%= path === '/admin/add-product' ? 'active' : '' %>" href="/admin/add-product">Add Product
-                    </a>
-                </li>
-                <li class="main-header__item">
-                    <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Products
-                    </a>
-                </li>
-            <% } %>
-        </ul>
-        <ul class="main-header__item-list">
-            <% if (!isAuthenticated) { %>
-                <li class="main-header__item">
-                    <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
-                </li>
-                <li class="main-header__item">
-                    <a class="<%= path === '/signup' ? 'active' : '' %>" href="/signup">Signup</a>
-                </li>
-            <% } else { %>
-                <li class="main-header__item">
-                    <form action="/logout" method="post">
-                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                        <button type="submit">Logout</button>
-                    </form>
-                </li>
-            <% } %>
-        </ul>
-    </nav>
-</header>
+<header class="primary-header flex">
 
-<nav class="mobile-nav">
-    <ul class="mobile-nav__item-list">
-        <li class="mobile-nav__item">
-            <a class="<%= path === '/' ? 'active' : '' %>" href="/">Shop</a>
-        </li>
-        <li class="mobile-nav__item">
-            <a class="<%= path === '/products' ? 'active' : '' %>" href="/products">Products</a>
-        </li>
-        <% if (isAuthenticated) { %>
-            <li class="mobile-nav__item">
-                <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
-            </li>
-            <li class="mobile-nav__item">
-                <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
-            </li>
-            <li class="mobile-nav__item">
-                <a class="<%= path === '/admin/add-product' ? 'active' : '' %>" href="/admin/add-product">Add Product
-                </a>
-            </li>
-            <li class="mobile-nav__item">
-                <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Products
-                </a>
-            </li>
-        <% } %>
-        <% if (!isAuthenticated) { %>
-            <li class="mobile-nav__item">
-                <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
-            </li>
-            <li class="mobile-nav__item">
-                <a class="<%= path === '/signup' ? 'active' : '' %>" href="/signup">Signup</a>
-            </li>
-        <% } else { %>
-            <li class="mobile-nav__item">
-                <form action="/logout" method="post">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <button type="submit">Logout</button>
-                </form>
-            </li>
-        <% } %>
-    </ul>
-</nav>
+    <div>
+        <a class="<%= path === '/' ? 'active' : '' %>" href="/">
+            <img src="/img/logo.jpg" alt="Normal Logo" class="logo">
+        </a>
+    </div>
+
+    <button class="mobile-nav-toggle" 
+    aria-expanded="false"
+    aria-controls="primary-navigation">
+      <span class="sr-only">Menu</span>
+    </button>
+    <div class="flex nav_items">
+        <nav>
+            <ul id="primary-navigation" 
+            data-visible="false"
+            class="primary-navigation flex">
+              <% if (isAuthenticated) { %>
+              <li class="main-header__item">
+                  <a class="<%= path === '/products' ? 'active' : '' %>" href="/products">Products
+                  </a>
+              <li class="main-header__item">
+                  <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
+                
+              <li class="main-header__item">
+                  <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
+              <li class="main-header__item">
+                  <a class="<%= path === '/admin/add-product' ? 'active' : '' %>" href="/admin/add-product">Add Product
+                  </a>
+              <li class="main-header__item">
+                  <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Products
+                  </a>
+              <% } %>
+              <% if (!isAuthenticated) { %>
+                  <li class="main-header__item">
+                      <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
+                  </li>
+                  <li class="main-header__item">
+                      <a class="<%= path === '/signup' ? 'active' : '' %>" href="/signup">Signup</a>
+                  </li>
+              <% } else { %>
+                  <li class="main-header__item">
+                      <form action="/logout" method="post">
+                          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                          <button type="submit">Logout</button>
+                      </form>
+                  </li>
+              <% } %>
+            </ul>
+          </nav>
+          <button id="dark-mode-toggle"
+              class="dark-mode-toggle"
+              aria-label="toggle dark mode"
+              >
+              <img src="/img/dark_mode.svg" alt="dark_mode" id="dark_mode">
+              <img src="/img/light_mode.svg" alt="light_mode" id="light_mode">
+          </button>   
+    </div>
+  </header>

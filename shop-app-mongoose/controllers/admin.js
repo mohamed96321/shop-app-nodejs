@@ -32,7 +32,7 @@ exports.postAddProduct = (req, res, next) => {
         price: price,
         description: description
       },
-      errorMessage: 'You should fill out all fields!'
+      errorMessage: 'You Should Fill Out All Fields, Or Enter Valid Values.'
     });
   }
   const product = new Product({
@@ -80,7 +80,7 @@ exports.postEditProduct = (req, res, next) => {
         description: updatedDesc,
         _id: prodId
       },
-      errorMessage: 'You should fill out all fields!'
+      errorMessage: 'You Should Fill Out All Fields, Or Enter Valid Values.'
     });
   }
 
@@ -154,5 +154,9 @@ exports.postDeleteProduct = (req, res, next) => {
     console.log("Product is removed!")
     res.redirect('/admin/products');
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 };
