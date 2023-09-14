@@ -5,15 +5,32 @@
             <img src="/img/logo.jpg" alt="Normal Logo" class="logo">
         </a>
     </div>
-
-    <button class="mobile-nav-toggle" 
-    aria-expanded="false"
-    aria-controls="primary-navigation">
-      <span class="sr-only">Menu</span>
-    </button>
-    <div class="flex nav_items">
-        <nav>
-            <ul class="flex ul_auth">
+    <div class="flex">
+          <ul id="primary-navigation" 
+            data-visible="false"
+            class="primary-navigation flex">
+              <% if (isAuthenticated) { %>
+              
+              <li class="main-header__item">
+                  <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
+                
+              <li class="main-header__item">
+                  <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
+              <li class="main-header__item">
+                  <a class="<%= path === '/admin/add-product' ? 'active' : '' %>" href="/admin/add-product">Add Product
+                  </a>
+              <li class="main-header__item">
+                  <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Products
+                  </a>
+              <% } %>
+              
+            </ul>
+            <button class="mobile-nav-toggle" 
+            aria-expanded="false"
+            aria-controls="primary-navigation">
+                <span class="sr-only">Menu</span>
+            </button>
+              <ul class="flex ul_auth">
                 <% if (!isAuthenticated) { %>
                     <li class="main-header__item">
                         <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
@@ -30,34 +47,12 @@
                     </li>
                 <% } %>
               </ul>
-            <ul id="primary-navigation" 
-            data-visible="false"
-            class="primary-navigation flex">
-              <% if (isAuthenticated) { %>
-              <li class="main-header__item">
-                  <a class="<%= path === '/products' ? 'active' : '' %>" href="/products">Products
-                  </a>
-              <li class="main-header__item">
-                  <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
-                
-              <li class="main-header__item">
-                  <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
-              <li class="main-header__item">
-                  <a class="<%= path === '/admin/add-product' ? 'active' : '' %>" href="/admin/add-product">Add Product
-                  </a>
-              <li class="main-header__item">
-                  <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Products
-                  </a>
-              <% } %>
-              
-            </ul>
-          </nav>
-          <button id="dark-mode-toggle"
-              class="dark-mode-toggle"
-              aria-label="toggle dark mode"
-              >
-              <img src="/img/dark_mode.svg" alt="dark_mode" id="dark_mode">
-              <img src="/img/light_mode.svg" alt="light_mode" id="light_mode">
-          </button>   
+              <button id="dark-mode-toggle"
+                  class="dark-mode-toggle"
+                  aria-label="toggle dark mode"
+                  >
+                  <img src="/img/dark_mode.svg" alt="dark_mode" id="dark_mode">
+                  <img src="/img/light_mode.svg" alt="light_mode" id="light_mode">
+              </button>  
     </div>
   </header>

@@ -116,10 +116,6 @@ ul {
   margin-inline-end: 0.75em;
 }
 
-.ul_auth {
-  margin-top: 25px;
-}
-
 .sr-only {
   display: none;
 }
@@ -128,15 +124,11 @@ ul {
   display: none;
 }
 
-.nav_items {
-  padding-inline: clamp(2.25rem, 10vw, 2.25rem);
-}
-
-@media (max-width: 55em) {
+@media (max-width: 53em) {
   .primary-navigation {
     --gap: 2em;
     position: fixed;
-    z-index: 1000;
+    z-index: 1000;  
     inset: 0 0 0 30%;
     flex-direction: column;
     padding: min(30vh, 10rem) 2rem;
@@ -162,15 +154,9 @@ ul {
   .mobile-nav-toggle[aria-expanded="true"] {
     background-image: url("../img/multiply.svg");
   }
-  .dark-mode-toggle {
-    margin-right: 55px;
-  }
-  .ul_auth {
-    margin-top: 12px;
-  }
 }
 
-@media (min-width: 55em) and (max-width: 55em) {
+@media (min-width: 53em) and (max-width: 55em) {
   .primary-navigation a > span[aria-hidden] {
     display: none;
   }
@@ -179,6 +165,17 @@ ul {
 @media (min-width: 35em) {
   .primary-navigation {
     --gap: 1.3rem;
+  }
+  .ul_auth {
+    margin-top: 13px;
+  }
+}
+@media (max-width: 53em) {
+  .ul_auth {
+    margin-top: 13px;
+  }
+  .dark-mode-toggle {
+    margin-right: 5.5rem;
   }
 }
 /* ==================== Navbar Design ================= */
@@ -352,7 +349,7 @@ form {
   border-radius: 2px;
   background: var(--clr-input-bg);
   color: var(--clr-input-clr);
-  padding: 5px 0;
+  padding: 0.425rem 0.65rem;
 }
 
 .form-control input:focus,
