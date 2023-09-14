@@ -66,10 +66,10 @@ exports.postLogin = (req, res, next) => {
         req.flash('error', errorMsg);
         return res.redirect('/login');
       }
-      // if (user.isVerified === false) {
-      //   req.flash('error', 'Please verify your email first.');
-      //   return res.redirect('/login');
-      // }
+      if (user.isVerified === false) {
+        req.flash('error', 'Please verify your email first.');
+        return res.redirect('/login');
+      }
       bcrypt.compare(password, user.password)
       .then(doMatch => {
         if (doMatch) {
@@ -103,56 +103,67 @@ exports.postLogout = (req, res, next) => {
 };
 
 exports.postSignup = (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.log(errors.array());
-    return res.status(422).render('auth/signup', {
-      path: '/signup',
-      pageTitle: 'ASUW Store | Signup',
-      errorMessage: errors.array()[0].msg
-    });
-  }
-  User.findOne({email: email})
-  .then(userDoc => {
-    if (userDoc) {
-      req.flash('error', 'Email exists already. Please pick another email.');
+  crypto.randomBytes(32, (err, buffer) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const errors = validationResult(req);
+
+    if (err) {
+      console.log(err);
       return res.redirect('/signup');
     }
-    return bcrypt
-    .hash(password, 12)
-    .then(hashedPassword => {
-      const user = new User({
-        email: email,
-        password: hashedPassword,
-        isVerified: "false",
-        cart: { items: [] }
+
+    const token = buffer.toString('hex');
+    if (!errors.isEmpty()) {
+      console.log(errors.array());
+      return res.status(422).render('auth/signup', {
+        path: '/signup',
+        pageTitle: 'ASUW Store | Signup',
+        errorMessage: errors.array()[0].msg
       });
-      return user.save();
-    }).then(user => {
-      res.redirect('/login');
-      return transporter.sendMail({
-        to: email,
-        from: MY_EMAIL,
-        subject: 'Succeeded Signing up!',
-        html: `
-          <p>Congrats! you are signing up successfully.</p>
-          <p>Click the link below to verify your email.</p>
-          <a href="http://localhost:3000/verified/${user._id}">Click here</a>
-        `
-      });
+    }
+    User.findOne({email: email})
+    .then(userDoc => {
+      if (userDoc) {
+        req.flash('error', 'Email exists already. Please pick another email.');
+        return res.redirect('/signup');
+      }
+      return bcrypt
+      .hash(password, 12)
+      .then(hashedPassword => {
+        const user = new User({
+          email: email,
+          password: hashedPassword,
+          isVerified: false,
+          cart: { items: [] },
+          resetToken: token,
+          resetTokenExpiration: Date.now() + 3600000
+        });
+        return user.save();
+      }).then(user => {
+        res.redirect('/login');
+        return transporter.sendMail({
+          to: email,
+          from: MY_EMAIL,
+          subject: 'Succeeded Signing up!',
+          html: `
+            <p>Congrats! you are signing up successfully.</p>
+            <p>Click the link below to verify your email.</p>
+            <a href="http://localhost:3000/verified/${token}">Click here</a>
+          `
+        });
+      })
+      .then((info) => {
+        console.log('SUCCESS');
+      })
+      .catch(err => console.log(err));
     })
-    .then((info) => {
-      console.log('SUCCESS');
-    })
-    .catch(err => console.log(err));
-  })
-  .catch(err => {
-    const error = new Error(err);
-    error.httpStatusCode = 500;
-    return next(error);
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
   });
 };
 
@@ -262,6 +273,48 @@ exports.postNewPassword = (req, res, next) => {
   })
   .then(hashedPassword => {
     resetUser.password = hashedPassword;
+    resetUser.resetToken= undefined;
+    resetUser.resetTokenExpiration = undefined;
+    return resetUser.save();
+  })
+  .then(result => {
+    res.redirect('/login');
+  })
+  .catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
+};
+
+exports.getVerified = (req, res, next) => {
+  const token = req.params.token;
+  User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
+  .then(user => {
+    res.render('auth/verify', {
+      path: '/account-verified',
+      pageTitle: 'ASUW Store | Verify Account',
+      userId: user._id.toString(),
+      isVerifiedToken: token
+    });
+  })
+  .catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
+};
+
+exports.postVerified = (req, res, next) => {
+  const userId = req.body.userId;
+  const isVerifiedToken = req.body.isVerifiedToken;
+  let resetUser;
+  User.findOne({resetToken: isVerifiedToken, resetTokenExpiration: {$gt: Date.now()}, _id: userId})
+  .then(user => {
+    resetUser = user;
+    return resetUser;
+  }).then(resetUser => {
+    resetUser.isVerified = true;
     resetUser.resetToken= undefined;
     resetUser.resetTokenExpiration = undefined;
     return resetUser.save();

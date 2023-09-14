@@ -1,22 +1,22 @@
 const Product = require('../models/product');
 const Order = require('../models/order');
 
-exports.getProducts = (req, res, next) => {
-  Product
-  .find()
-  .then((products) => {
-    res.render('shop/product-list', {
-      prods: products,
-      pageTitle: 'AZUW Store | Products', 
-      path: '/products'
-    });
-  })
-  .catch(err => {
-    const error = new Error(err);
-    error.httpStatusCode = 500;
-    return next(error);
-  });
-};
+// exports.getProducts = (req, res, next) => {
+//   Product
+//   .find()
+//   .then((products) => {
+//     res.render('shop/product-list', {
+//       prods: products,
+//       pageTitle: 'AZUW Store | Products', 
+//       path: '/products'
+//     });
+//   })
+//   .catch(err => {
+//     const error = new Error(err);
+//     error.httpStatusCode = 500;
+//     return next(error);
+//   });
+// };
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;

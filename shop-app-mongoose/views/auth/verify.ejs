@@ -3,16 +3,18 @@
 </head>
 
 <body>
+   <%- include('../includes/navigation.ejs') %>
     <main>
       <div class="center">
-        <h3>Your email is verified successfully.</h2>
-        <h4>Click the link below to login.</h3>
+        <h3>You Sign up successfully.</h3>
+        <h4>Please click the button below to Complete Verification Your Email.</h4>
       </div>
-        <form class="login-form" action="/login" method="POST">
+        <form class="login-form" action="/account-verified" method="POST">
           <div class="center">
-            <input type="hidden" name="isVerified" value="true">
+            <input type="hidden" name="userId" value="<%= userId %>">
+            <input type="hidden" name="isVerifiedToken" value="<%= isVerifiedToken %>">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button class="verified-link" type="submit">Login</button>
+            <button class="btn" type="submit">Verify Account</button>
           </div>
         </form>
     </main>

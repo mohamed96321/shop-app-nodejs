@@ -62,4 +62,8 @@ router.get('/reset/:token', authController.getNewPassword);
 
 router.post('/new-password', authController.postNewPassword);
 
+router.get('/verified/:token', authController.getVerified);
+
+router.post('/account-verified', authController.postVerified);
+
 module.exports = router;
