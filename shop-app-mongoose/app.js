@@ -65,7 +65,6 @@ app.use((req, res, next) => {
   }
   User.findById(req.session.user._id)
   .then(user => {
-    // throw new Error('Error occurred');
     if (!user) {
       return next();
     }

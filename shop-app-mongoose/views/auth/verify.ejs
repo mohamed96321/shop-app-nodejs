@@ -1,0 +1,19 @@
+<%- include('../includes/head.ejs') %>
+    
+</head>
+
+<body>
+    <main>
+      <div class="center">
+        <h3>Your email is verified successfully.</h2>
+        <h4>Click the link below to login.</h3>
+      </div>
+        <form class="login-form" action="/login" method="POST">
+          <div class="center">
+            <input type="hidden" name="isVerified" value="true">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="verified-link" type="submit">Login</button>
+          </div>
+        </form>
+    </main>
+<%- include('../includes/end.ejs') %>

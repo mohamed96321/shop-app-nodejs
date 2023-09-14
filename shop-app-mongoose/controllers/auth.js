@@ -4,6 +4,7 @@ const User = require('../models/user');
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const { validationResult } = require('express-validator');
+const user = require('../models/user');
 const errorMsg = 'Invalid email or password. Please enter correct one.';
 
 // API Keys For Google
@@ -65,6 +66,10 @@ exports.postLogin = (req, res, next) => {
         req.flash('error', errorMsg);
         return res.redirect('/login');
       }
+      // if (user.isVerified === false) {
+      //   req.flash('error', 'Please verify your email first.');
+      //   return res.redirect('/login');
+      // }
       bcrypt.compare(password, user.password)
       .then(doMatch => {
         if (doMatch) {
@@ -122,10 +127,11 @@ exports.postSignup = (req, res, next) => {
       const user = new User({
         email: email,
         password: hashedPassword,
+        isVerified: "false",
         cart: { items: [] }
       });
       return user.save();
-    }).then(result => {
+    }).then(user => {
       res.redirect('/login');
       return transporter.sendMail({
         to: email,
@@ -133,6 +139,8 @@ exports.postSignup = (req, res, next) => {
         subject: 'Succeeded Signing up!',
         html: `
           <p>Congrats! you are signing up successfully.</p>
+          <p>Click the link below to verify your email.</p>
+          <a href="http://localhost:3000/verified/${user._id}">Click here</a>
         `
       });
     })
@@ -202,7 +210,7 @@ exports.postReset = (req, res, next) => {
         html: `
           <p>You requested a password reset</p>
           <p>Click this link below, to set a new password</p>
-          <a href="http://localhost:3000/reset/${token}">Click here!</a>
+          <a href="http://localhost:3000/reset/${token}">Click here</a>
         `
       });
     })

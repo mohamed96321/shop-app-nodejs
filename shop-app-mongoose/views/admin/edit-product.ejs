@@ -1,6 +1,5 @@
 <%- include('../includes/head.ejs') %>
-    <link rel="stylesheet" href="/css/forms.css">
-    <link rel="stylesheet" href="/css/product.css">
+    
 </head>
 
 <body>
@@ -15,9 +14,14 @@
                 <label for="title">Title</label>
                 <input type="text" name="title" id="title" value="<% if (editing || hasError) { %><%=product.title %><% } %>">
             </div>
-            <div class="form-control">
+            <!-- <div class="form-control">
                 <label for="imageUrl">Image URL</label>
                 <input type="text" name="imageUrl" id="imageUrl" value="<% if (editing || hasError) { %><%=product.imageUrl %><% } %>">
+            </div> -->
+            <div class="form-control">
+                <label for="image">Image</label>
+                <input type="file" name="image" 
+                id="image">
             </div>
             <div class="form-control">
                 <label for="price">Price</label>
@@ -31,7 +35,9 @@
                 <input type="hidden" value="<%= product._id %>" name="productId">
             <% } %>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button class="btn" type="submit"><% if (editing) { %> Update Product <% } else { %> Add Product <% } %></button>
+            <div class="center">
+                <button class="btn" type="submit"><% if (editing) { %> Update Product <% } else { %> Add Product <% } %></button>
+            </div>
         </form>
     </main>
 <%- include('../includes/end.ejs') %>

@@ -13,6 +13,23 @@
     </button>
     <div class="flex nav_items">
         <nav>
+            <ul class="flex ul_auth">
+                <% if (!isAuthenticated) { %>
+                    <li class="main-header__item">
+                        <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
+                    </li>
+                    <li class="main-header__item">
+                        <a class="<%= path === '/signup' ? 'active' : '' %>" href="/signup">Signup</a>
+                    </li>
+                <% } else { %>
+                    <li class="main-header__item">
+                        <form action="/logout" method="post">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button type="submit">Logout</button>
+                        </form>
+                    </li>
+                <% } %>
+              </ul>
             <ul id="primary-navigation" 
             data-visible="false"
             class="primary-navigation flex">
@@ -32,21 +49,7 @@
                   <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Products
                   </a>
               <% } %>
-              <% if (!isAuthenticated) { %>
-                  <li class="main-header__item">
-                      <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
-                  </li>
-                  <li class="main-header__item">
-                      <a class="<%= path === '/signup' ? 'active' : '' %>" href="/signup">Signup</a>
-                  </li>
-              <% } else { %>
-                  <li class="main-header__item">
-                      <form action="/logout" method="post">
-                          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                          <button type="submit">Logout</button>
-                      </form>
-                  </li>
-              <% } %>
+              
             </ul>
           </nav>
           <button id="dark-mode-toggle"

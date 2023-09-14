@@ -1,6 +1,6 @@
 /*================== Declare Value of  Color =====================*/
 :root {
-  --clr-white: #FFFFFF;
+  --clr-header: #FFFFFF;
   --clr-primary: #EB5446;
   --clr-neutral: #3F1D38;
   --clr-black: #000000;
@@ -12,26 +12,33 @@
   --clr-password: rgb(41, 39, 39);
   --clr-price: #4d4d4d;
   --clr-body: #FFFFFF;
-  --clr-text: #ffffff;
+  --clr-text: #000000;
+  --clr-input-clr: #000000;
+  --clr-input-bg: #ffffff;
+  --clr-neutral-btn: #3F1D38;
+  --clr-btn: #FFFFFF;
   --gap : 1rem;
 }
 /*================== Declare Value of  Color =====================*/
 
 /*================== VARIABLE Dark Mode =====================*/
 .darkmode {
-  --clr-white: #000000;
   --clr-primary: #EB5446;
   --clr-neutral: #3F1D38;
   --clr-text: #ffffff;
   --clr-black: #FFFFFF;
   --clr-primary-100: #4771fa;
   --clr-primary-200: #b9c9ff;
-  --clr-body: #211e1e;
-  --clr-danger: red;
-  --clr-danger-alt: rgb(255, 176, 176);
+  --clr-body: rgb(41, 40, 40);
+  --clr-danger: rgb(255, 176, 176);
+  --clr-danger-alt: rgb(222, 39, 39);
   --clr-shadow: rgba(53, 50, 50, 0.625);
   --clr-password: rgb(232, 230, 230);
   --clr-price: #f6f2f2;
+  --clr-text: #ffffff;
+  --clr-input-clr: #ffffff;
+  --clr-input-bg: rgb(41, 40, 40);
+  --clr-btn: #FFFFFF;
 }
 /*================== VARIABLE Dark Mode =====================*/
 
@@ -90,7 +97,7 @@ a {
   background-color: var(--clr-neutral);
 }
 
-.primary-navigation {
+ul {
   list-style: none;
 }
 
@@ -107,6 +114,10 @@ a {
 .primary-navigation a > [aria-hidden="true"] { 
   font-weight: 700;
   margin-inline-end: 0.75em;
+}
+
+.ul_auth {
+  margin-top: 25px;
 }
 
 .sr-only {
@@ -152,7 +163,10 @@ a {
     background-image: url("../img/multiply.svg");
   }
   .dark-mode-toggle {
-    margin-right: 30px;
+    margin-right: 55px;
+  }
+  .ul_auth {
+    margin-top: 12px;
   }
 }
 
@@ -223,7 +237,7 @@ form {
   background: transparent;
   border: none;
   text-decoration: none;
-  color: var(--clr-white);
+  color: var(--clr-header);
   cursor: pointer;
 }
 
@@ -282,8 +296,8 @@ form {
   text-decoration: none;
   font: inherit;
   border: 1px solid var(--clr-neutral);
-  color: var(--clr-neutral);
-  background: var(--clr-white);
+  color: var(--clr-btn);
+  background: var(--clr-primary);
   border-radius: 3px;
   cursor: pointer;
 }
@@ -291,7 +305,7 @@ form {
 .btn:hover,
 .btn:active {
   background-color: var(--clr-neutral);
-  color: var(--clr-white);
+  color: var(--clr-btn);
 }
 
 .btn.danger {
@@ -302,7 +316,7 @@ form {
 .btn.danger:hover,
 .btn.danger:active {
   background: var(--clr-danger);
-  color: var(--clr-white);
+  color: var(--clr-btn);
 }
 
 @media (min-width: 768px) {
@@ -333,9 +347,12 @@ form {
 
 .form-control input,
 .form-control textarea {
-  border: 1px solid var(--clr-neutral);
+  border: 1px solid var(--clr-input-clr);
   font: inherit;
   border-radius: 2px;
+  background: var(--clr-input-bg);
+  color: var(--clr-input-clr);
+  padding: 5px 0;
 }
 
 .form-control input:focus,
@@ -413,10 +430,14 @@ form {
 }
 
 .password_info {
-  font-size: 13px;
-  color: var(--clr-password);
   line-height: 1;
   margin-bottom: 28px;
+}
+
+.password_info, 
+.email_info {
+  font-size: 13px;
+  color: var(--clr-password);
 }
 /* Auth Design */
 
@@ -475,3 +496,8 @@ button {
   cursor: pointer;
 }
 /* Dark Theme Design */
+
+.verified-link {
+  text-decoration: underline;
+  color: #172e7a;
+}
