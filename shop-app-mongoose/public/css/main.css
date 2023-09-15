@@ -63,7 +63,6 @@ body {
   font-family: 'Roboto', sans-serif;
   background-image: linear-gradient(-245deg, var(--clr-body-alt), var(--clr-body), var(--clr-body-new));
   color: var(--clr-text-body);
-  overflow: hidden;
 }
 
 main {
@@ -77,12 +76,6 @@ a {
 }
 
 /* =================== Navbar Design =============== */
-::after,
-::before {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 
 .flex {
   display: flex;
@@ -484,7 +477,8 @@ form {
 }
 
 .img-details img {
-  width: 30%;
+  width: 450px;
+  height: auto;
   margin-top: 20px;
 }
 /* Products Design */
