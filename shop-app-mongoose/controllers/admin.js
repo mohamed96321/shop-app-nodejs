@@ -14,10 +14,23 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const title = req.body.title;
-  const imageUrl = req.body.image;
+  const image = req.file;
   const price = req.body.price;
   const description = req.body.description;
-
+  if (!image) {
+    return res.status(422).render('admin/edit-product', { 
+      pageTitle: 'AZUW Admin | Add Product', 
+      path: '/admin/add-product',
+      editing: false,
+      hasError: true,
+      product: {
+        title: title,
+        price: price,
+        description: description
+      },
+      errorMessage: 'Attached file is not an image.'
+    });
+  }
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -35,6 +48,9 @@ exports.postAddProduct = (req, res, next) => {
       errorMessage: 'You Should Fill Out All Fields, Or Enter Valid Values.'
     });
   }
+
+  const imageUrl = image.path;
+
   const product = new Product({
     // For checking any errors at database server
     // _id: new mongoose.Types.ObjectId('65007f52b8a222af659ea0fe'),
@@ -57,53 +73,6 @@ exports.postAddProduct = (req, res, next) => {
     return next(error);
   });
 };
-
-exports.postEditProduct = (req, res, next) => {
-  const prodId = req.body.productId;
-  const updatedTitle = req.body.title;
-  const updatedPrice = req.body.price;
-  const updatedImageUrl = req.body.imageUrl;
-  const updatedDesc = req.body.description;
-
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res.status(422).render('admin/edit-product', { 
-      pageTitle: 'AZUW Admin | Edit Product', 
-      path: '/admin/edit-product',
-      editing: true,
-      hasError: true,
-      product: {
-        title: updatedTitle,
-        imageUrl: updatedImageUrl,
-        price: updatedPrice,
-        description: updatedDesc,
-        _id: prodId
-      },
-      errorMessage: 'You Should Fill Out All Fields, Or Enter Valid Values.'
-    });
-  }
-
-  Product.findById(prodId)
-  .then(product => {
-    if (product.userId.toString() !== req.user._id.toString()) {
-      return res.redirect('/');
-    }
-    product.title = updatedTitle;
-    product.price = updatedPrice;
-    product.description = updatedDesc;
-    product.imageUrl = updatedImageUrl;
-    return product.save().then(result => {
-      console.log("Updated Product");
-      res.redirect('/admin/products');
-    })
-  })
-  .catch(err => {
-    const error = new Error(err);
-    error.httpStatusCode = 500;
-    return next(error);
-  });
-}; 
 
 exports.getEditProduct = (req, res, next) => {
   const editMode = req.query.edit;
@@ -133,6 +102,49 @@ exports.getEditProduct = (req, res, next) => {
   });
 };
 
+exports.postEditProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  const updatedTitle = req.body.title;
+  const updatedPrice = req.body.price;
+  const image = req.file;
+  const updatedDesc = req.body.description;
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render('admin/edit-product', { 
+      pageTitle: 'AZUW Admin | Edit Product', 
+      path: '/admin/edit-product',
+      editing: true,
+      hasError: true,
+      product: {
+        title: updatedTitle,
+        price: updatedPrice,
+        description: updatedDesc,
+        _id: prodId
+      },
+      errorMessage: 'You Should Fill Out All Fields, Or Enter Valid Values.'
+    });
+  }
+
+  Product.findById(prodId)
+  .then(product => {
+    if (product.userId.toString() !== req.user._id.toString()) {
+      return res.redirect('/');
+    }
+    product.title = updatedTitle;
+    product.price = updatedPrice;
+    product.description = updatedDesc;
+    if (image) {
+      product.imageUrl = image.path;
+    }
+    return product.save().then(result => {
+      console.log("Updated Product");
+      res.redirect('/admin/products');
+    })
+  })
+}; 
+
 exports.getProduct = (req, res, next) => {
   Product.find({userId: req.user._id})
   // .select('title price -_id')
@@ -144,7 +156,11 @@ exports.getProduct = (req, res, next) => {
       path: '/admin/products'
     });
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+  });
 };
 
 exports.postDeleteProduct = (req, res, next) => {

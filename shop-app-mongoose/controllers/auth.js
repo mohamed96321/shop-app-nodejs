@@ -67,7 +67,7 @@ exports.postLogin = (req, res, next) => {
         return res.redirect('/login');
       }
       if (user.isVerified === false) {
-        req.flash('error', 'Please verify your email first.');
+        req.flash('error', 'Please check your email to verify account.');
         return res.redirect('/login');
       }
       bcrypt.compare(password, user.password)
