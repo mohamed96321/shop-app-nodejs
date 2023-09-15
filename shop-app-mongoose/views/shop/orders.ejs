@@ -21,10 +21,19 @@
                                 <% }); %>
                             </ul>
                             <div class="center">
-                                <button class="btn danger">Delete</button>
+                                <form action="/delete-order" method="POST">
+                                    <input type="hidden" value="<%= order._id %>" name="orderId">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <button class="btn danger" type="submit">Delete</button>
+                                </form>
                             </div>
                         </li>
                     <% }); %>
+                    <div class="center pad-checkout">
+                        <form action="/checkout" method="POST">
+                            <button class="btn" type="submit">Checkout</button>
+                        </form>
+                    </div>
                 </ul>
             <% } %>
         </main>

@@ -148,6 +148,20 @@ exports.postOrder = (req, res, next) => {
   });
 };
 
+exports.postDeleteOrder = (req, res, next) => {
+  const orderId = req.body.orderId;
+  Order.deleteOne({ _id: orderId})
+  .then(result => {
+    console.log("Order is removed!")
+    res.redirect('/orders');
+  })
+  .catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
+};
+
 exports.getInvoice = (req, res, next) => {
   const orderId = req.params.orderId;
   const invoiceName = 'invoice-' + orderId + '.pdf';
