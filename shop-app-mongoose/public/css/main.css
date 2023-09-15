@@ -1,44 +1,44 @@
 /*================== Declare Value of  Color =====================*/
 :root {
   --clr-header: #FFFFFF;
-  --clr-primary: #EB5446;
-  --clr-neutral: #3F1D38;
-  --clr-black: #000000;
+  --clr-header-alt: #EBAB15;
+  --clr-primary-btn: #EBAB15;
+  --clr-header-bg: #3F1D38;
+  --clr-text-body: #000000;
   --clr-primary-100: #4771fa;
   --clr-primary-200: #b9c9ff;
   --clr-danger: red;
-  --clr-danger-alt: rgb(255, 176, 176);
-  --clr-shadow: rgba(0, 0, 0, 0.26);
+  --clr-danger-alt: rgb(250, 143, 143);
+  --clr-shadow: rgba(222, 220, 220, 0.819);
   --clr-password: rgb(41, 39, 39);
-  --clr-price: #4d4d4d;
+  --clr-price: #323131;
   --clr-body: #FFFFFF;
-  --clr-text: #000000;
-  --clr-input-clr: #000000;
-  --clr-input-bg: #ffffff;
+  --clr-input-text: #000000;
+  --clr-input-bg: #FFFFFF;
+  --clr-input-border: #FFFFFF;
   --clr-neutral-btn: #3F1D38;
-  --clr-btn: #FFFFFF;
+  --clr-neutral-btn-alt: #1e5b65;
+  --clr-text-btn: #FFFFFF;
   --gap : 1rem;
 }
 /*================== Declare Value of  Color =====================*/
 
 /*================== VARIABLE Dark Mode =====================*/
 .darkmode {
-  --clr-primary: #EB5446;
-  --clr-neutral: #3F1D38;
-  --clr-text: #ffffff;
-  --clr-black: #FFFFFF;
-  --clr-primary-100: #4771fa;
-  --clr-primary-200: #b9c9ff;
-  --clr-body: rgb(41, 40, 40);
-  --clr-danger: rgb(255, 176, 176);
-  --clr-danger-alt: rgb(222, 39, 39);
-  --clr-shadow: rgba(53, 50, 50, 0.625);
-  --clr-password: rgb(232, 230, 230);
-  --clr-price: #f6f2f2;
-  --clr-text: #ffffff;
-  --clr-input-clr: #ffffff;
-  --clr-input-bg: rgb(41, 40, 40);
-  --clr-btn: #FFFFFF;
+  --clr-primary-btn: #EBAB15;
+  --clr-header-bg: #2d2c2b;
+  --clr-text-body: #FFFFFF;
+  --clr-shadow: rgba(71, 69, 69, 0.86);
+  --clr-password: rgb(41, 39, 39);
+  --clr-price: #f7f7f7;
+  --clr-input-text: #FFFFFF;
+  --clr-input-bg: #FFFFFF;
+  --clr-input-border: #FFFFFF;
+  --clr-input-bg: rgb(25, 23, 23);
+  --clr-neutral-btn: #1e5b65;
+  --clr-neutral-btn-alt: #3F1D38;
+  --clr-text-btn: #FFFFFF;
+  --clr-body: #211e2d;
 }
 /*================== VARIABLE Dark Mode =====================*/
 
@@ -58,7 +58,7 @@ body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
   background-color: var(--clr-body);
-  color: var(--clr-black);
+  color: var(--clr-text-body);
   overflow: hidden;
 }
 
@@ -69,7 +69,7 @@ main {
 
 a {
   text-decoration: none;
-  color: var(--clr-black);
+  color: var(--clr-text-body);
 }
 
 /* =================== Navbar Design =============== */
@@ -94,7 +94,7 @@ a {
 .primary-header {
   align-items: center;
   justify-content: space-between;
-  background-color: var(--clr-neutral);
+  background-color: var(--clr-header-bg);
 }
 
 ul {
@@ -206,8 +206,8 @@ form {
 }
 
 .user-message--error {
-  border-color: var(--clr-danger);
-  background: var(--clr-danger-alt);
+  border-color: var(--clr-danger-alt);
+  background: var(--clr-danger);
 }
 
 .center,
@@ -243,7 +243,7 @@ form {
 .main-header__item a.active,
 .main-header__item button:hover,
 .main-header__item button:active {
-  color: var(--clr-primary);
+  color: var(--clr-header-alt);
 }
 
 .grid {
@@ -254,7 +254,8 @@ form {
 }
 
 .card {
-  box-shadow: 0 2px 8px var(--clr-shadow);
+  box-shadow: 2px 0 8px var(--clr-shadow);
+  border-radius: 3px;
 }
 
 .card__header,
@@ -292,28 +293,29 @@ form {
   padding: 0.25rem 1rem;
   text-decoration: none;
   font: inherit;
-  border: 1px solid var(--clr-neutral);
-  color: var(--clr-btn);
-  background: var(--clr-primary);
+  border: 1px solid var(--clr-neutral-btn-alt);
+  color: var(--clr-text-btn);
+  background: var(--clr-neutral-btn);
   border-radius: 3px;
   cursor: pointer;
 }
 
 .btn:hover,
 .btn:active {
-  background-color: var(--clr-neutral);
-  color: var(--clr-btn);
+  background-color: var(--clr-neutral-btn-alt);
+  color: var(--clr-text-btn);
 }
 
 .btn.danger {
   color: var(--clr-danger);
   border-color: var(--clr-danger);
+  background: var(--clr-body);
 }
 
 .btn.danger:hover,
 .btn.danger:active {
   background: var(--clr-danger);
-  color: var(--clr-btn);
+  color: var(--clr-text-btn);
 }
 
 @media (min-width: 768px) {
@@ -344,17 +346,17 @@ form {
 
 .form-control input,
 .form-control textarea {
-  border: 1px solid var(--clr-input-clr);
+  border: 1px solid var(--clr-input-border);
   font: inherit;
   border-radius: 2px;
   background: var(--clr-input-bg);
-  color: var(--clr-input-clr);
+  color: var(--clr-input-text);
   padding: 0.425rem 0.65rem;
 }
 
 .form-control input:focus,
 .form-control textarea:focus {
-  outline-color: var(--clr-neutral);
+  outline-color: var(--clr-text-body);
 }
 /* Forms Design */
 
@@ -378,16 +380,16 @@ form {
 }
 
 .orders__products {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .orders__products-item {
-    margin: 0.5rem 0;
-    padding: 0.5rem;
-    border: 1px solid var(--clr-neutral);
-    color: var(--clr-neutral);
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border: 1px solid var(--clr-neutral-btn-alt);
+  color: var(--clr-neutral-btn);
 }
 /* Orders Design */
 
@@ -406,7 +408,7 @@ form {
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  box-shadow: 0 2px 8px var(--clr-shadow);
+  /* box-shadow: 0 2px 8px var(--clr-shadow); */
   margin-bottom: 1rem;
 }
 
@@ -493,8 +495,3 @@ button {
   cursor: pointer;
 }
 /* Dark Theme Design */
-
-.verified-link {
-  text-decoration: underline;
-  color: #172e7a;
-}
