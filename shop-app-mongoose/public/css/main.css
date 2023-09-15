@@ -12,7 +12,9 @@
   --clr-shadow: rgba(100, 97, 97, 0.721);
   --clr-password: rgb(41, 39, 39);
   --clr-price: #323131;
-  --clr-body: #FFFFFF;
+  --clr-body: rgb(255, 255, 255);
+  --clr-body-alt: rgb(255, 255, 255);
+  --clr-body-new: rgb(255, 255, 255);
   --clr-input-text: #000000;
   --clr-input-bg: #FFFFFF;
   --clr-input-border: #000000;
@@ -38,7 +40,9 @@
   --clr-neutral-btn: #1e5b65;
   --clr-neutral-btn-alt: #3F1D38;
   --clr-text-btn: #FFFFFF;
-  --clr-body: #1e1b1b;
+  --clr-body: rgb(27, 28, 32);
+  --clr-body-alt: rgb(31, 29, 32);
+  --clr-body-new: rgb(27, 26, 26);
 }
 /*================== VARIABLE Dark Mode =====================*/
 
@@ -57,7 +61,7 @@ body {
   padding: 0;
   margin: 0;
   font-family: 'Roboto', sans-serif;
-  background-color: var(--clr-body);
+  background-image: linear-gradient(-245deg, var(--clr-body-alt), var(--clr-body), var(--clr-body-new));
   color: var(--clr-text-body);
   overflow: hidden;
 }
@@ -134,7 +138,7 @@ ul {
     padding: min(30vh, 8.5rem) 2rem;
     transform: translateX(100%);
     transition: transform 350ms ease-out;
-    background: var(--clr-neutral);
+    background: var(--clr-neutral-btn);
   }
 
   .mobile-nav-toggle {
@@ -418,7 +422,7 @@ form {
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  /* box-shadow: 0 2px 8px var(--clr-shadow); */
+  box-shadow: 0 2px 8px var(--clr-shadow);
   margin-bottom: 1rem;
 }
 
@@ -477,6 +481,11 @@ form {
 
 .product__description {
   text-align: center;
+}
+
+.img-details img {
+  width: 30%;
+  margin-top: 20px;
 }
 /* Products Design */
 
