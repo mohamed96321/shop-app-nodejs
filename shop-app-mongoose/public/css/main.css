@@ -9,13 +9,13 @@
   --clr-primary-200: #b9c9ff;
   --clr-danger: red;
   --clr-danger-alt: rgb(250, 143, 143);
-  --clr-shadow: rgba(222, 220, 220, 0.819);
+  --clr-shadow: rgba(100, 97, 97, 0.721);
   --clr-password: rgb(41, 39, 39);
   --clr-price: #323131;
   --clr-body: #FFFFFF;
   --clr-input-text: #000000;
   --clr-input-bg: #FFFFFF;
-  --clr-input-border: #FFFFFF;
+  --clr-input-border: #000000;
   --clr-neutral-btn: #3F1D38;
   --clr-neutral-btn-alt: #1e5b65;
   --clr-text-btn: #FFFFFF;
@@ -26,7 +26,7 @@
 /*================== VARIABLE Dark Mode =====================*/
 .darkmode {
   --clr-primary-btn: #EBAB15;
-  --clr-header-bg: #2d2c2b;
+  --clr-header-bg: #1e5b65;
   --clr-text-body: #FFFFFF;
   --clr-shadow: rgba(71, 69, 69, 0.86);
   --clr-password: rgb(41, 39, 39);
@@ -38,7 +38,7 @@
   --clr-neutral-btn: #1e5b65;
   --clr-neutral-btn-alt: #3F1D38;
   --clr-text-btn: #FFFFFF;
-  --clr-body: #211e2d;
+  --clr-body: #1e1b1b;
 }
 /*================== VARIABLE Dark Mode =====================*/
 
@@ -356,7 +356,7 @@ form {
 
 .form-control input:focus,
 .form-control textarea:focus {
-  outline-color: var(--clr-text-body);
+  outline-color: var(--clr-neutral-btn);
 }
 /* Forms Design */
 
@@ -366,6 +366,7 @@ form {
   list-style: none;
   padding: 0;
   margin: 0;
+  padding-inline: 15%;
 }
 
 .orders__item h1 {
@@ -382,14 +383,14 @@ form {
 .orders__products {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0 12px 0;
 }
 
 .orders__products-item {
   margin: 0.5rem 0;
   padding: 0.5rem;
-  border: 1px solid var(--clr-neutral-btn-alt);
-  color: var(--clr-neutral-btn);
+  border: 1px solid var(--clr-neutral-btn);
+  color: var(--clr-text-body);
 }
 /* Orders Design */
 
