@@ -20,6 +20,8 @@
   --clr-input-border: #000000;
   --clr-neutral-btn: #3F1D38;
   --clr-neutral-btn-alt: #1e5b65;
+  --clr-neutral-btn-add: #3F1D38;
+  --clr-neutral-btn-alt-add: #1e5b65;
   --clr-text-btn: #FFFFFF;
   --gap : 1rem;
 }
@@ -30,7 +32,7 @@
   --clr-primary-btn: #EBAB15;
   --clr-header-bg: #1e5b65;
   --clr-text-body: #FFFFFF;
-  --clr-shadow: rgba(71, 69, 69, 0.86);
+  --clr-shadow: rgba(47, 46, 46, 0.86);
   --clr-password: rgb(41, 39, 39);
   --clr-price: #f7f7f7;
   --clr-input-text: #FFFFFF;
@@ -43,6 +45,8 @@
   --clr-body: rgb(27, 28, 32);
   --clr-body-alt: rgb(31, 29, 32);
   --clr-body-new: rgb(27, 26, 26);
+  --clr-neutral-btn-add: #1e5b65;
+  --clr-neutral-btn-alt-add: #3F1D38;
 }
 /*================== VARIABLE Dark Mode =====================*/
 
@@ -51,10 +55,26 @@
   font-family: "Roboto";
   src: url("../fonts/Roboto-Regular-webfont.woff") format("woff");
 }
+
+@font-face {
+  font-family: "3Dumb";
+  src: url("../fonts/3Dumb-webfont.woff") format("woff");
+}
 /*================== Import Font =====================*/
 
 * {
   box-sizing: border-box;
+}
+
+.store {
+  font-family: "3Dumb", sans-serif;
+  font-size: 2rem;
+  margin: 0 1.5rem 0;
+  color: var(--clr-header);
+}
+
+.logo {
+  margin: 1rem 0 0.8rem;
 }
 
 body {
@@ -79,13 +99,7 @@ a {
 
 .flex {
   display: flex;
-  gap: var(--gap, 1rem);
-}
-
-.logo {
-  margin: 1.5rem;
-  width: 56px;
-  height: 44px;
+  gap: 0.7rem;
 }
 
 .primary-header {
@@ -121,7 +135,7 @@ ul {
   display: none;
 }
 
-@media (max-width: 53em) {
+@media (max-width: 63em) {
   .primary-navigation {
     --gap: 2.5em;
     position: fixed;
@@ -144,13 +158,24 @@ ul {
     background-repeat: no-repeat;
     border: 0;
     width: 2rem;
-    top: 2rem;
-    right: 2rem;
+    top: 1.5rem;
+    right: 60px;
     filter: hue-rotate(175deg) contrast(0%) brightness(185%);
   }
   .mobile-nav-toggle[aria-expanded="true"] {
     background-image: url("../img/multiply.svg");
   }
+  .store {
+    font-size: 1.8rem;
+  }
+  .dark-mode-toggle {
+    margin-right: 25px;
+    margin-left: 15px;
+  }
+}
+
+.dark-mode-toggle {
+  margin-right: 15px;
 }
 
 @media (min-width: 53em) and (max-width: 55em) {
@@ -171,8 +196,11 @@ ul {
   .ul_auth {
     margin-top: 13px;
   }
-  .dark-mode-toggle {
-    margin-right: 5.5rem;
+}
+
+@media (max-width: 30em) {
+  .span-store {
+    display: none;
   }
 }
 /* ==================== Navbar Design ================= */
@@ -212,13 +240,13 @@ form {
   text-align: center;
 }
 
-.image {
+/* .image {
   height: 20rem;
 }
 
 .image img {
   height: 100%;
-}
+} */
 
 .main-header__item {
   margin: 0 1rem;
@@ -239,7 +267,8 @@ form {
 .main-header__item a:active,
 .main-header__item a.active,
 .main-header__item button:hover,
-.main-header__item button:active {
+.main-header__item button:active,
+.logo a.active {
   color: var(--clr-header-alt);
 }
 
@@ -272,7 +301,8 @@ form {
 }
 
 .card__image img {
-  width: 100%;
+  width: 75%;
+  margin-left: 40px;
 }
 
 .card__actions {
@@ -309,6 +339,19 @@ form {
   background: var(--clr-body);
 }
 
+.btn.add-to__cart {
+  color: var(--clr-text-btn);
+  border-color: var(--clr-neutral-btn-add);
+  background: var(--clr-neutral-btn-alt-add);
+}
+
+.btn.btn.add-to__cart:hover,
+.btn.btn.add-to__cart:active {
+  color: var(--clr-text-btn);
+  border-color: var(--clr-neutral-btn-alt-add);
+  background: var(--clr-neutral-btn-add);
+}
+
 .btn.danger:hover,
 .btn.danger:active {
   background: var(--clr-danger);
@@ -318,10 +361,6 @@ form {
 @media (min-width: 768px) {
   .main-header__nav {
     display: flex;
-  }
-
-  #side-menu-toggle {
-    display: none;
   }
   .user-message {
     width: 30rem;
@@ -375,6 +414,11 @@ form {
   box-shadow: 0 2px 8px var(--clr-shadow);
   padding: 1rem;
   margin-bottom: 1rem;
+}
+
+.a-link__invoice {
+  text-decoration: underline;
+  color: var(--clr-primary-100);
 }
 
 .orders__products {
@@ -508,3 +552,24 @@ button {
   cursor: pointer;
 }
 /* Dark Theme Design */
+
+/* Pagination Design */
+.pagination a {
+  color: var(--clr-text-body);
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--clr-neutral-btn);
+  margin: 0 1rem;
+}
+
+.pagination {
+  margin-top: 20px;
+}
+
+.pagination a:hover,
+.pagination a:active,
+.pagination a.active {
+  background-color: var(--clr-neutral-btn);
+  color: var(--clr-text-btn);
+}
+/* Pagination Design */
+

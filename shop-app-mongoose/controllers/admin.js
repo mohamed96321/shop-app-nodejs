@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
 const Product = require('../models/product');
+const fileHelper = require('../util/file');
+
+const ITEMS_PER_PAGE = 3;
 
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product',{ 
@@ -123,7 +126,7 @@ exports.postEditProduct = (req, res, next) => {
         description: updatedDesc,
         _id: prodId
       },
-      errorMessage: 'You Should Fill Out All Fields, Or Enter Valid Values.'
+      errorMessage: 'You should enter valid values to all fields.'
     });
   }
 
@@ -136,6 +139,7 @@ exports.postEditProduct = (req, res, next) => {
     product.price = updatedPrice;
     product.description = updatedDesc;
     if (image) {
+      fileHelper.deleteFile(product.imageUrl);
       product.imageUrl = image.path;
     }
     return product.save().then(result => {
@@ -146,33 +150,60 @@ exports.postEditProduct = (req, res, next) => {
 }; 
 
 exports.getProduct = (req, res, next) => {
+  const page = +req.query.page || 1;
+  let totalItems;
+
   Product.find({userId: req.user._id})
   // .select('title price -_id')
   // .populate('userId', 'name')
+  .countDocuments()
+  .then(numProducts => {
+    totalItems = numProducts;
+    return Product.find()
+    .skip((page - 1) * ITEMS_PER_PAGE)
+    .limit(ITEMS_PER_PAGE);
+  })
   .then((products) => {
     res.render('admin/products', {
       prods: products,
       pageTitle: 'AZUW Admin | Manage Products', 
-      path: '/admin/products'
+      path: '/admin/products',
+      currentPage: page,
+      hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+      hasPrevPage: page > 1,
+      nextPage: page + 1,
+      prevPage: page - 1,
+      lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
     });
-  })
-  .catch(err => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-  });
-};
-
-exports.postDeleteProduct = (req, res, next) => {
-  const prodId = req.body.productId;
-  Product.deleteOne({ _id: prodId, userId: req.user._id })
-  .then(result => {
-    console.log("Product is removed!")
-    res.redirect('/admin/products');
   })
   .catch(err => {
     const error = new Error(err);
     error.httpStatusCode = 500;
     return next(error);
   });
+};
+
+exports.deleteProduct = (req, res, next) => {
+  // const prodId = req.body.productId;
+  const prodId = req.params.productId;
+  Product.findById(prodId)
+  .then(product => {
+    if (!product) {
+      return next(new Error('Product not found.'));
+    }
+    fileHelper.deleteFile(product.imageUrl);
+    return Product.deleteOne({ _id: prodId, userId: req.user._id });
+  })
+  .then(result => {
+    console.log("Product is removed!")
+    // res.redirect('/admin/products');
+    res.status(200).json({message: 'Success!'});
+  })
+  .catch(err => {
+    // const error = new Error(err);
+    // error.httpStatusCode = 500;
+    // return next(error);
+    res.status(500).json({message: 'Deleting product failed.'});
+  });
+
 };
