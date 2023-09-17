@@ -31,7 +31,7 @@
 .darkmode {
   --clr-primary-btn: #EBAB15;
   --clr-header-bg: #1e5b65;
-  --clr-text-body: #FFFFFF;
+  --clr-text-body: #f5f2f2;
   --clr-shadow: rgba(47, 46, 46, 0.86);
   --clr-password: rgb(41, 39, 39);
   --clr-price: #f7f7f7;
@@ -416,6 +416,11 @@ form {
   margin-bottom: 1rem;
 }
 
+#order-btn {
+  font-size: 1.08rem;
+  padding: 6px 16px;
+}
+
 .a-link__invoice {
   text-decoration: underline;
   color: var(--clr-primary-100);
@@ -428,7 +433,7 @@ form {
 }
 
 .pad-checkout {
-  padding-top: 20px;
+  padding-top: 18px;
 }
 
 .pad-checkout button {

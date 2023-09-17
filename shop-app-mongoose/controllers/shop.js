@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const Order = require('../models/order'); // Import the Order model
 const Product = require('../models/product');
+const stripe = require('stripe')('sk_test_51NeHUCExIU6xXgdAnsOsilINYcE3V6UjBtlvzO6atE5ZeY14HNAFhYfWrfpsmq70RLC494K4zP1WApz9YPXAyqEI00Ay3mb7jv');
 
 const ITEMS_PER_PAGE = 16;
 
@@ -136,7 +137,49 @@ exports.getOrders = (req, res, next) => {
   });
 };
 
-exports.postOrder = (req, res, next) => {
+exports.getCheckout = (req, res, next) => {
+  let products;
+  let total = 0;
+  req.user
+  .populate('cart.items.productId')
+  .then(user => {
+    products = user.cart.items;
+    total = 0;
+    products.forEach(p => {
+      total += p.quantity * p.productId.price;
+    });
+    return stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: products.map(p => {
+        return {
+          name: p.productId.title,
+          description: p.productId.description,
+          amount: p.productId.price * 100,
+          currency: 'usd',
+          quantity: p.quantity
+        };
+      }),
+      success_url: req.protocol + '://' + req.get('host') + '/checkout/success', // => http://localhost:3000
+      cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel'
+    });
+  })
+  .then(session => {
+    res.render('shop/checkout', {
+      path: '/checkout',
+      pageTitle: 'AZUW Store | Payment',
+      products: products,
+      totalSum: total,
+      sessionId: session.id
+    });
+  })
+  .catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
+};
+
+exports.getCheckoutSuccess = (req, res, next) => {
   req.user
   .populate('cart.items.productId')
   .then(user => {
@@ -197,7 +240,7 @@ exports.getInvoice = (req, res, next) => {
       }
 
       const invoiceName = 'invoice-' + orderId + '.pdf';
-      const invoicePath = path.join('data', 'orders', invoiceName);
+      // const invoicePath = path.join('data', 'orders', invoiceName);
 
       const pdfDoc = new PDFDocument();
 
@@ -216,7 +259,7 @@ exports.getInvoice = (req, res, next) => {
 
       pdfDoc.fontSize(16).text('Total Price: $' + totalPrice);
 
-      pdfDoc.pipe(fs.createWriteStream(invoicePath)); // Save the PDF to the local file path
+      // pdfDoc.pipe(fs.createWriteStream(invoicePath)); // Save the PDF to the local file path
 
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');

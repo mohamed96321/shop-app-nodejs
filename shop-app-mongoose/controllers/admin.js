@@ -150,16 +150,17 @@ exports.postEditProduct = (req, res, next) => {
 }; 
 
 exports.getProduct = (req, res, next) => {
+
   const page = +req.query.page || 1;
   let totalItems;
 
-  Product.find({userId: req.user._id})
+  Product.find({ userId: req.user._id })
   // .select('title price -_id')
   // .populate('userId', 'name')
   .countDocuments()
   .then(numProducts => {
     totalItems = numProducts;
-    return Product.find()
+    return Product.find({userId: req.user._id})
     .skip((page - 1) * ITEMS_PER_PAGE)
     .limit(ITEMS_PER_PAGE);
   })

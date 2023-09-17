@@ -19,11 +19,14 @@
                     <% }) %>
                 </ul>
                 <br>
-                <div class="center">
-                    <form action="/create-order" method="POST">
+                <div class="center pad-checkout">
+                    <!-- <form action="/create-order" method="POST">
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <button class="btn" type="submit">Order Now!</button>
-                    </form>
+                    </form> -->
+                    
+                    <a href="/checkout" class="btn">Checkout</a>
+                    
                 </div>
             <% } else { %>
                 <div class="centered">
