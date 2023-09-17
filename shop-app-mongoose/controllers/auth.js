@@ -56,7 +56,7 @@ exports.postLogin = (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(422).render('auth/login', {
       path: '/login',
-      pageTitle: 'ASUW Store | Login',
+      pageTitle: 'ASUW Store | Sign In',
       errorMessage: errors.array()[0].msg
     });
   }
@@ -119,7 +119,7 @@ exports.postSignup = (req, res, next) => {
       console.log(errors.array());
       return res.status(422).render('auth/signup', {
         path: '/signup',
-        pageTitle: 'ASUW Store | Signup',
+        pageTitle: 'ASUW Store | Sign Up',
         errorMessage: errors.array()[0].msg
       });
     }

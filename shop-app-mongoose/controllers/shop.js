@@ -3,9 +3,18 @@ const fs = require('fs');
 const path = require('path');
 const Order = require('../models/order'); // Import the Order model
 const Product = require('../models/product');
+
 const stripe = require('stripe')('sk_test_51NeHUCExIU6xXgdAnsOsilINYcE3V6UjBtlvzO6atE5ZeY14HNAFhYfWrfpsmq70RLC494K4zP1WApz9YPXAyqEI00Ay3mb7jv');
 
+const paypal = require('paypal-rest-sdk');
+
 const ITEMS_PER_PAGE = 16;
+
+paypal.configure({
+  'mode': 'sandbox', //sandbox or live
+  'client_id': 'AfFI4frsr9QyKfaDSkoeHT6cOH8U-8pnI-d4vxDY4vW5YIG7iQ1rkTOA8x_iJU7ua0S8Ag3XhYgzA89y',
+  'client_secret': 'EIg78pNphU33ps4oio1zFL5gKE7uTFiP8o_ykqg01R2C6O7kTkid7Kgy-tdB73m1AMpuhY1Df0BZQX9Y'
+});
 
 // exports.getProducts = (req, res, next) => {
 //   Product
@@ -137,76 +146,143 @@ exports.getOrders = (req, res, next) => {
   });
 };
 
+// exports.getCheckout = (req, res, next) => {
+//   let products;
+//   let total = 0;
+//   req.user
+//   .populate('cart.items.productId')
+//   .then(user => {
+//     products = user.cart.items;
+//     total = 0;
+//     products.forEach(p => {
+//       total += p.quantity * p.productId.price;
+//     });
+//     return stripe.checkout.sessions.create({
+//       payment_method_types: ['card'],
+//       line_items: products.map(p => {
+//         return {
+//           name: p.productId.title,
+//           description: p.productId.description,
+//           amount: p.productId.price * 100,
+//           currency: 'usd',
+//           quantity: p.quantity
+//         };
+//       }),
+//       success_url: req.protocol + '://' + req.get('host') + '/checkout/success', // => http://localhost:3000
+//       cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel'
+//     });
+//   })
+//   .then(session => {
+//     res.render('shop/checkout', {
+//       path: '/checkout',
+//       pageTitle: 'AZUW Store | Payment',
+//       products: products,
+//       totalSum: total,
+//       sessionId: session.id
+//     });
+//   })
+//   .catch(err => {
+//     const error = new Error(err);
+//     error.httpStatusCode = 500;
+//     return next(error);
+//   });
+// };
+
 exports.getCheckout = (req, res, next) => {
   let products;
   let total = 0;
   req.user
-  .populate('cart.items.productId')
-  .then(user => {
-    products = user.cart.items;
-    total = 0;
-    products.forEach(p => {
-      total += p.quantity * p.productId.price;
+    .populate('cart.items.productId')
+    .then(user => {
+      products = user.cart.items;
+      total = 0;
+      products.forEach(p => {
+        total += p.quantity * p.productId.price;
+      });
+      const createPaymentJson = {
+        intent: 'sale',
+        payer: {
+          payment_method: 'paypal'
+        },
+        redirect_urls: {
+          return_url: req.protocol + '://' + req.get('host') + '/checkout/success',
+          cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel'
+        },
+        transactions: [
+          {
+            item_list: {
+              items: products.map(p => {
+                return {
+                  name: p.productId.title,
+                  description: p.productId.description,
+                  price: p.productId.price,
+                  currency: 'USD',
+                  quantity: p.quantity
+                };
+              })
+            },
+            amount: {
+              currency: 'USD',
+              total: total.toFixed(2)
+            }
+          }
+        ]
+      };
+
+      paypal.payment.create(createPaymentJson, function (error, payment) {
+        if (error) {
+          throw error;
+        } else {
+          for (let i = 0; i < payment.links.length; i++) {
+            if (payment.links[i].rel === 'approval_url') {
+              res.render('shop/checkout', {
+                path: '/checkout',
+                pageTitle: 'AZUW Store | Payment',
+                products: products,
+                totalSum: total,
+                sessionId: payment.id,
+                approvalUrl: payment.links[i].href
+              });
+            }
+          }
+        }
+      });
+    })
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
-    return stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: products.map(p => {
-        return {
-          name: p.productId.title,
-          description: p.productId.description,
-          amount: p.productId.price * 100,
-          currency: 'usd',
-          quantity: p.quantity
-        };
-      }),
-      success_url: req.protocol + '://' + req.get('host') + '/checkout/success', // => http://localhost:3000
-      cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel'
-    });
-  })
-  .then(session => {
-    res.render('shop/checkout', {
-      path: '/checkout',
-      pageTitle: 'AZUW Store | Payment',
-      products: products,
-      totalSum: total,
-      sessionId: session.id
-    });
-  })
-  .catch(err => {
-    const error = new Error(err);
-    error.httpStatusCode = 500;
-    return next(error);
-  });
 };
 
-exports.getCheckoutSuccess = (req, res, next) => {
-  req.user
-  .populate('cart.items.productId')
-  .then(user => {
-    const products = user.cart.items.map(i => {
-      return { quantity: i.quantity, product: { ...i.productId._doc } };
-    }); 
-    const order = new Order({
-      user: {
-        email: req.user.email,
-        userId: req.user
-      },
-      products: products
-    });
-    return order.save();
-  })
-  .then(result => {
-    req.user.clearCart();
-  })
-  .then(() => {
-    res.redirect('/orders');
-  })
-  .catch(err => {
-    const error = new Error(err);
-    error.httpStatusCode = 500;
-    return next(error);
-  });
-};
+// exports.getCheckoutSuccess = (req, res, next) => {
+//   req.user
+//   .populate('cart.items.productId')
+//   .then(user => {
+//     const products = user.cart.items.map(i => {
+//       return { quantity: i.quantity, product: { ...i.productId._doc } };
+//     }); 
+//     const order = new Order({
+//       user: {
+//         email: req.user.email,
+//         userId: req.user
+//       },
+//       products: products
+//     });
+//     return order.save();
+//   })
+//   .then(result => {
+//     req.user.clearCart();
+//   })
+//   .then(() => {
+//     res.redirect('/orders');
+//   })
+//   .catch(err => {
+//     const error = new Error(err);
+//     error.httpStatusCode = 500;
+//     return next(error);
+//   });
+// };
 
 exports.postDeleteOrder = (req, res, next) => {
   const orderId = req.body.orderId;
@@ -219,6 +295,45 @@ exports.postDeleteOrder = (req, res, next) => {
     const error = new Error(err);
     error.httpStatusCode = 500;
     return next(error);
+  });
+};
+
+exports.getCheckoutSuccess = (req, res, next) => {
+  const payerId = req.query.PayerID;
+  const paymentId = req.query.paymentId;
+  let products;
+
+  paypal.payment.execute(paymentId, { payer_id: payerId }, function (error, payment) {
+    if (error) {
+      throw error;
+    } else {
+      req.user
+        .populate('cart.items.productId')
+        .then(user => {
+          products = user.cart.items.map(i => {
+            return { quantity: i.quantity, product: { ...i.productId._doc } };
+          });
+          const order = new Order({
+            user: {
+              email: req.user.email,
+              userId: req.user
+            },
+            products: products
+          });
+          return order.save();
+        })
+        .then(result => {
+          req.user.clearCart();
+        })
+        .then(() => {
+          res.redirect('/orders');
+        })
+        .catch(err => {
+          const error = new Error(err);
+          error.httpStatusCode = 500;
+          return next(error);
+        });
+    }
   });
 };
 

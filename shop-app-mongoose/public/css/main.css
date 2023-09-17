@@ -198,7 +198,7 @@ ul {
   }
 }
 
-@media (max-width: 30em) {
+@media (max-width: 37em) {
   .span-store {
     display: none;
   }

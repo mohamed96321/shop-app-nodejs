@@ -16,10 +16,21 @@
             <div class="center">
               <h3>Total Rate = $<%= totalSum %></h3>
             </div>
-            <div class="center">
+            <div class="center" id="paypal-button-container">
               <button id="order-btn" class="btn">Order Now</button>
-              <script src="https://js.stripe.com/v3/"></script>
+            </div>
+              <!-- <script src="https://js.stripe.com/v3/"></script> -->
+              <script 
+                src="https://www.paypal.com/sdk/js?client-id=AfFI4frsr9QyKfaDSkoeHT6cOH8U-8pnI-d4vxDY4vW5YIG7iQ1rkTOA8x_iJU7ua0S8Ag3XhYgzA89y">
+              </script>
               <script>
+                var orderBtn = document.getElementById('order-btn');
+                orderBtn.addEventListener('click', function() {
+                  var approvalUrl = '<%= approvalUrl %>';
+                  window.location.href = approvalUrl;
+                });
+              </script>
+              <!-- <script>
                 var stripe = Stripe('pk_test_51NeHUCExIU6xXgdA5EYVL0Bc1AkG8U3cVmwKSN8UC9IPQyJ9cvfbxACSDwhOIx8Jwc1lluRLOqvqg4rKGfESm2zC00XXrpLx9g');
                 var orderBtn = document.getElementById('order-btn');
                 orderBtn.addEventListener('click', function (){
@@ -27,8 +38,7 @@
                     sessionId: '<%= sessionId %>'
                   });
                 });
-              </script>
-            </div>
+              </script> -->
           </ul>
         </main>
         <%- include('../includes/end.ejs') %>
