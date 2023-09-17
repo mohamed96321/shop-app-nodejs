@@ -4,7 +4,7 @@ const path = require('path');
 const Order = require('../models/order'); // Import the Order model
 const Product = require('../models/product');
 
-const stripe = require('stripe')('sk_test_51NeHUCExIU6xXgdAnsOsilINYcE3V6UjBtlvzO6atE5ZeY14HNAFhYfWrfpsmq70RLC494K4zP1WApz9YPXAyqEI00Ay3mb7jv');
+const stripe = require('stripe')('SECRET_KEY');
 
 const paypal = require('paypal-rest-sdk');
 
@@ -12,8 +12,8 @@ const ITEMS_PER_PAGE = 16;
 
 paypal.configure({
   'mode': 'sandbox', //sandbox or live
-  'client_id': 'AfFI4frsr9QyKfaDSkoeHT6cOH8U-8pnI-d4vxDY4vW5YIG7iQ1rkTOA8x_iJU7ua0S8Ag3XhYgzA89y',
-  'client_secret': 'EIg78pNphU33ps4oio1zFL5gKE7uTFiP8o_ykqg01R2C6O7kTkid7Kgy-tdB73m1AMpuhY1Df0BZQX9Y'
+  'client_id': '',
+  'client_secret': ''
 });
 
 // exports.getProducts = (req, res, next) => {
