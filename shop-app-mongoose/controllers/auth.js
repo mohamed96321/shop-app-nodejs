@@ -8,9 +8,9 @@ const user = require('../models/user');
 const errorMsg = 'Invalid email or password. Please enter correct one.';
 
 // API Keys For Google
-const GOOGLE_CLIENT_ID = '122824213593-fk25er245keqedle3dofdjed9far8ic9.apps.googleusercontent.com';
-const GOOGLE_CLIENT_SECRET = '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';
-const REFRESH_TOKEN = '1//04fgffE0RHfxaCgYIARAAGAQSNwF-L9IrXJQLMY2o40jX8F2R5icXq2M6NvaJ73GB-rc3RF8jzI0eKxJqJBRd9Dm89oDRT9ghp3Y';
+const GOOGLE_CLIENT_ID = '';
+const GOOGLE_CLIENT_SECRET = '';
+const REFRESH_TOKEN = '';
 const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
 const MY_EMAIL = 'atefm.me499@gmail.com';
 
