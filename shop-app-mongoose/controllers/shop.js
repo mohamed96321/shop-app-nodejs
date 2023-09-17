@@ -4,7 +4,7 @@ const path = require('path');
 const Order = require('../models/order'); // Import the Order model
 const Product = require('../models/product');
 
-const stripe = require('stripe')('SECRET_KEY');
+const stripe = require('stripe')('STRIPE_KEY');
 
 const paypal = require('paypal-rest-sdk');
 
