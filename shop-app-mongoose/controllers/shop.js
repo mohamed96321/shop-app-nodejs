@@ -8,7 +8,7 @@ const stripe = require('stripe')('STRIPE_KEY');
 
 const paypal = require('paypal-rest-sdk');
 
-const ITEMS_PER_PAGE = 16;
+const ITEMS_PER_PAGE = 20;
 
 paypal.configure({
   'mode': 'sandbox', //sandbox or live
@@ -299,42 +299,33 @@ exports.postDeleteOrder = (req, res, next) => {
 };
 
 exports.getCheckoutSuccess = (req, res, next) => {
-  const payerId = req.query.PayerID;
-  const paymentId = req.query.paymentId;
-  let products;
 
-  paypal.payment.execute(paymentId, { payer_id: payerId }, function (error, payment) {
-    if (error) {
-      throw error;
-    } else {
-      req.user
-        .populate('cart.items.productId')
-        .then(user => {
-          products = user.cart.items.map(i => {
-            return { quantity: i.quantity, product: { ...i.productId._doc } };
-          });
-          const order = new Order({
-            user: {
-              email: req.user.email,
-              userId: req.user
-            },
-            products: products
-          });
-          return order.save();
-        })
-        .then(result => {
-          req.user.clearCart();
-        })
-        .then(() => {
-          res.redirect('/orders');
-        })
-        .catch(err => {
-          const error = new Error(err);
-          error.httpStatusCode = 500;
-          return next(error);
-        });
-    }
-  });
+  req.user
+    .populate('cart.items.productId')
+    .then(user => {
+      const products = user.cart.items.map(i => {
+        return { quantity: i.quantity, product: { ...i.productId._doc } };
+      });
+      const order = new Order({
+        user: {
+          email: req.user.email,
+          userId: req.user
+        },
+        products: products
+      });
+      return order.save();
+    })
+    .then(result => {
+      req.user.clearCart();
+    })
+    .then(() => {
+      res.redirect('/orders');
+    })
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.getInvoice = (req, res, next) => {
@@ -359,9 +350,9 @@ exports.getInvoice = (req, res, next) => {
 
       const pdfDoc = new PDFDocument();
 
-      pdfDoc.fontSize(26).text('Invoice', { underline: true });
+      pdfDoc.fontSize(26).text('Invoice', { underline: true, align: 'center' });
 
-      pdfDoc.fontSize(20).text('----------------------------------');
+      pdfDoc.fontSize(16).text(' ');
 
       let totalPrice = 0;
       order.products.forEach((prod) => {
@@ -369,10 +360,12 @@ exports.getInvoice = (req, res, next) => {
         pdfDoc.fontSize(16).text('Product Name: ' + prod.product.title);
         pdfDoc.fontSize(16).text('Quantity: ' + prod.quantity);
         pdfDoc.fontSize(16).text('Product Price: $' + prod.product.price);
-        pdfDoc.fontSize(20).text('----------------------------------');
+        pdfDoc.fontSize(16).text(' ');
       });
 
-      pdfDoc.fontSize(16).text('Total Price: $' + totalPrice);
+      pdfDoc.fontSize(16).text('Total Price: $' + totalPrice, {
+        align: 'center'
+      });
 
       // pdfDoc.pipe(fs.createWriteStream(invoicePath)); // Save the PDF to the local file path
 
