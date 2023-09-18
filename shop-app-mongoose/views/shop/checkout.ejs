@@ -27,18 +27,10 @@
                 var orderBtn = document.getElementById('order-btn');
                 orderBtn.addEventListener('click', function() {
                   var approvalUrl = '<%= approvalUrl %>';
+                  var sessionId = '<%= sessionId %>'; 
                   window.location.href = approvalUrl;
                 });
               </script>
-              <!-- <script>
-                var stripe = Stripe('pk_test_51NeHUCExIU6xXgdA5EYVL0Bc1AkG8U3cVmwKSN8UC9IPQyJ9cvfbxACSDwhOIx8Jwc1lluRLOqvqg4rKGfESm2zC00XXrpLx9g');
-                var orderBtn = document.getElementById('order-btn');
-                orderBtn.addEventListener('click', function (){
-                  stripe.redirectToCheckout({
-                    sessionId: '<%= sessionId %>'
-                  });
-                });
-              </script> -->
           </ul>
         </main>
         <%- include('../includes/end.ejs') %>
